@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import { grpc } from '@improbable-eng/grpc-web';
 import { NbThemeService } from '@nebular/theme';
 import { DataQueryService } from 'app/@core/mock/grpc/data-query.service';
@@ -23,12 +23,14 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
 
   private alive = true;
 
-  authjwt:any[] = [];
+  authjwt:any;
   deviceInfo : any;
-  cputemp:number;
+  ReqAgain : any ;
+
+  cputemp:any;
   cpuperf : any;
   internaltemp : any;
-  externaltemp : number = 10;
+  externaltemp : number;
   humiditylvl : any;
   exthumidity : any;
   hddusage : any;
@@ -39,25 +41,25 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
     title: 'CPU temperature',
     iconClass: 'nb-sunny-circled',
     type: 'primary',
-    value: ' °C',
+    value: '-- °C',
   };
   cpuPerfCard: CardSettings = {
     title: 'CPU performance',
     iconClass: 'nb-bar-chart',
     type: 'success',
-    value: ' %',
+    value: '-- %',
   };
   memUsaCard: CardSettings = {
     title: 'Memory usage',
     iconClass: 'nb-roller-shades',
     type: 'info',
-    value: ' %',
+    value: '-- %',
   };
   harDisCard: CardSettings = {
     title: 'Hard disk',
     iconClass: 'nb-grid-a',
     type: 'warning',
-    value: ' %',
+    value: '-- %',
   };
 
   statusCards: string;
@@ -118,13 +120,17 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(){
+    
+    
+    
     // this.logIn();
-    // console.log(this.deviceInfo);
+    // console.log(this.authjwt);
     
     
   }
   ngOnDestroy() {
     this.alive = false;
+    clearInterval(this.ReqAgain);
   }
 
 
@@ -138,7 +144,8 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   
   }
   
-  GetDeviceDiagnostics(){
+  GetDeviceDiagnostics(): any{
+    // console.log('ttt');
   
     const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
@@ -155,10 +162,10 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         this.internaltemp = this.deviceInfo.internaltemp;
         this.ramusage = this.deviceInfo.ramusage;
 
-        this.cpuTempCard.value = this.cputemp + this.cpuTempCard.value;
-        this.cpuPerfCard.value = this.cpuperf.toFixed(2) + this.cpuPerfCard.value;
-        this.memUsaCard.value = this.ramusage.toFixed(2) + this.memUsaCard.value;
-        this.harDisCard.value = this.hddusage + this.harDisCard.value;
+        this.cpuTempCard.value = this.cputemp+' °C' ;
+        this.cpuPerfCard.value = this.cpuperf.toFixed(2) +' %';
+        this.memUsaCard.value = this.ramusage.toFixed(2) +' %';
+        this.harDisCard.value = this.hddusage +' %';
       });
   
   }
@@ -180,11 +187,14 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
       auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
   
        this.iamService.authenticate(auth).then(response => {
-        //console.log(response);
-        this.authjwt.push(response);
-  
+        // console.log(response);
+         this.authjwt = response;
         // this.GetDeviceInfo();
         this.GetDeviceDiagnostics();
+        this.ReqAgain = setInterval(() => {this.GetDeviceDiagnostics(); 
+          // console.log(auth);
+          }, 6000);
+
         // this.getAp();
         
         //return response;      
