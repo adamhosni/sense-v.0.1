@@ -17,7 +17,7 @@ import { MapsRoutingModule, routedComponents } from './maps-routing.module';
     NbCardModule,
     NbButtonModule,
     NbAccordionModule,
-    NbIconModule
+    NbIconModule,
   ],
   exports: [],
   declarations: [
