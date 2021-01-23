@@ -1,0 +1,117 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+
+  nb-card-body {
+    padding: 0;
+  }
+
+  ::ng-deep .leaflet-top, ::ng-deep .leaflet-bottom {
+    z-index: 997;
+  }
+
+  ::ng-deep .leaflet-container {
+    width: 100%;
+    height: nb-theme(card-height-giant);
+  }
+}
+
+
+
+
+::ng-deep .wifiCustom .leaflet-popup-tip, 
+::ng-deep .wifiCustom .leaflet-popup-content-wrapper {
+    background: #ff7878;
+    color: white;
+    font-size: 16px;
+}
+
+::ng-deep .bluetoothCustom .leaflet-popup-tip,
+::ng-deep .bluetoothCustom .leaflet-popup-content-wrapper {
+    background: #897ffd;
+    color: white;
+    font-size: 16px;
+}
+
+::ng-deep .popup-table {
+  width: 100%;
+}
+
+::ng-deep .popup-table-row {
+  background-color: rgb(192, 192, 192);
+}
+
+
+::ng-deep .button-details {
+  background-color: rgba(121, 0, 0, 0.600); /* Green */
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 8px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+}
+::ng-deep .button-details:hover {
+  background-color: rgb(121, 0, 0); /* Green */
+  color: white;
+}
+
+::ng-deep .button-details:active {
+  background-color: rgb(121, 0, 0);
+  box-shadow: 0 2px #666;
+  transform: translateY(1px);
+}
+/********* * * * * * * * * * * * * * * * * * * * * * */
+
+::ng-deep .button-range {
+  background-color: rgba(26, 0, 121, 0.6);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
+}
+::ng-deep .button-range:hover {
+  background-color: rgb(26, 0, 121);
+  color: white;
+}
+
+::ng-deep .button-range:active {
+  background-color: rgb(26, 0, 121);
+  box-shadow: 0 2px #666;
+  transform: translateY(1px);
+}
+::ng-deep .button-center{
+  margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+::ng-deep .model-full {
+  position: absolute !important;
+  width: 60% ;
+ // height: 100% !important; ;
+  top: 20% !important;
+  left: 10% !important;
+  margin: 0 0 0 -150px !important;
+
+  .cdk-visually-hidden {
+    width: 99% !important;
+    height: 99% !important;
+  }
+
+  nb-dialog-container {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}

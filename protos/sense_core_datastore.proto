@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+import "sense_core_datamodel.proto";
+
+package sense;
+
+service DataStore {
+  rpc insertWiFiItems ( stream WiFiFramePointMsg ) returns ( google.protobuf.Empty ) {};        /// insert time point data for one or more WiFi devices - used to store WiFi results
+  
+  rpc insertWiFiTSItems ( stream WiFiFrameTimeSerieMsg ) returns ( google.protobuf.Empty ) {};  /// insert time point data for one or more WiFi devices - as time series - used to store WiFi results
+  
+  rpc insertBTItems ( stream BTFramePointMsg ) returns ( google.protobuf.Empty ) {};            /// insert time point data for one or more Bluetooth devices - used to store Bluetooth results
+  
+  rpc insertBTTSItems ( stream BTFrameTimeSerieMsg ) returns ( google.protobuf.Empty ) {};      /// insert time point data for one or more Bluetooth devices - as time series - used to store Bluetooth results
+}

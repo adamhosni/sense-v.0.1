@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package sense; 
+
+/**
+ * Represents the device update settings
+ */
+message DeviceUpdateConfigMessage{
+    bool auto_update   = 1; /// Automatic update setting
+    string serverHost  = 2; /// Update Server location
+    string curVersion  = 3; /// Current vesrion installed
+    string newVersion  = 4; /// New version available
+    int32  updateTime  = 5; /// Last update timestamp
+}
+
+/**
+ * Message to update the server host setting
+ */
+message DeviceUpdateHostMessage{
+    string serverHost  = 1; /// Update Server location
+}
+
+/**
+ * Message to set automatic updates true/false
+ */
+message DeviceUpdateAutoMessage{
+    bool auto_update   = 1; /// Automatic update setting
+}
+
+/**
+ * Update progress status message
+ */
+message DeviceUpdateProgressMessage {
+    enum status {
+        NONE = 0;   /// Nothing to report, default value for GRPC
+        PEND = 1;   /// New update is pending upgrade
+        DOWN = 2;   /// Update file download
+        WIP  = 3;   /// Update in progress
+        DONE = 4;   /// Update done
+        STOP = 5;   /// Update stopped - error
+    }
+    float  updateSize     = 1; /// File size in MB
+    int32  updateProgress = 2; /// update progress, in percentage
+    status updateStatus   = 3; /// update status
+    string curVersion     = 4; /// current installed version
+    string newVersion     = 5; /// new version available
+}
+
+message DeviceUpdateTriggerMessage {
+    enum trigger_type {
+        NONE    = 0;   /// Nothing - default value
+        CHECK   = 1;   /// Only checking for new update - no upgrade
+        UPGRADE = 2;   /// Start firmware upgrade in "notify only" mode
+        FILE    = 3;   /// Start uploading local file, then upgrade
+        URL     = 4;   /// Start downloading file, then upgrade
+    }
+    trigger_type trigger = 1;
+    string updatePath    = 2;  /// Shoud be empty when trigger_type CHECK/UPGRADE are selected
+}
+
+/**
+ * Update service
+ */
+service UpdateService {
+    /**
+     * Reads device updates settings
+     */
+    rpc DeviceUpdateSettings( google.protobuf.Empty ) returns ( DeviceUpdateConfigMessage ) {}
+    /**
+     * Updates server host
+     */
+    rpc DeviceUpdateHost( DeviceUpdateHostMessage ) returns ( google.protobuf.Empty ) {}
+    /**
+     * Automatic update true/false
+     */
+    rpc DeviceUpdateAuto( DeviceUpdateAutoMessage ) returns ( google.protobuf.Empty ) {}
+    /**
+     * Trigger manual update
+     */
+    rpc DeviceUpdateTrigger( DeviceUpdateTriggerMessage ) returns ( stream DeviceUpdateProgressMessage ) {}
+}
+    
+

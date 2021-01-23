@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package sense;
+
+import "google/protobuf/empty.proto";
+
+message TargetUpdateRequest {
+	enum Type {
+		NONE = 0;
+		WIFI = 1;
+		BLTH = 2;
+		AP	 = 3;
+	}
+	Type typeMAC      = 1;
+	repeated string TargetMAC  = 2;
+}
+
+
+service TargetListUpdateService {
+    rpc TargetCreateQuery (TargetUpdateRequest) returns (google.protobuf.Empty) {}
+    rpc TargetDeleteQuery (TargetUpdateRequest) returns (google.protobuf.Empty) {}
+}

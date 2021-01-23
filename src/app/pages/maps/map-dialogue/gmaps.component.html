@@ -1,0 +1,46 @@
+<nb-card status="success" size = "large">
+  <nb-card-header>Device ID: {{deviceId}}</nb-card-header>
+  <nb-card-body large>
+
+    <nb-accordion multi>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          Devices Detected
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <br>Number of detected devices: {{numberDevices}}
+          <p></p>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          Detection Details
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+         <p><nb-icon icon="square" status="danger"></nb-icon> 100 meters: <span>18 </span>Devices</p>
+         <p><nb-icon icon="square" status="success"></nb-icon> 300 meters: <span>9 </span>Devices</p>
+         <p><nb-icon icon="square" status="warning"></nb-icon> 500 meters: <span>7 </span>Devices</p>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          Edit
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
+          Originally, nebula was a name for any diffuse astronomical object,
+          including galaxies beyond the Milky Way.
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    </nb-accordion>
+    
+    
+    
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton hero status="success" (click)="deleteWifiRanges(listWifis)" [disabled]="rangesExist">Delete Ranges</button>
+    <button nbButton hero status="success" (click)="showWifiRanges(listWifis)" [disabled]="!rangesExist">Show Ranges</button>
+  </nb-card-footer>
+</nb-card>

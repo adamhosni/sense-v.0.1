@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package sense;
+
+/**
+ * Basic MAC infomration,
+ * Used by both WiFi and Bluetooth
+ */
+message BasicMacMsg {
+  string mac       = 1;   /// MAC address
+  string vendor    = 2;   /// Vendor (OUI)
+  string interface = 3;   /// Interface on which frame is caught
+}
+
+/**
+ * WiFi Frame description
+ */
+message WiFiFrameMsg {
+  enum FrameType {
+    UNKNOWN = 0;
+    MGMT    = 1;
+    CTRL    = 2;
+    DATA    = 3;
+    RTS     = 4;
+    CTS     = 5;
+    ACK     = 6;
+    OTHER   = 7;
+  }
+  BasicMacMsg info = 1;   /// Basic MAC info
+  FrameType frame  = 2;   /// WiFi Frame type - non-exhaustive
+  uint32 rssi      = 3;   /// WiFi RSSI value
+  string ssid      = 4;   /// Associated SSID - if any
+}
+
+/**
+ * Single WiFi frame detection point in time
+ */
+message WiFiFramePointMsg {
+  WiFiFrameMsg frame = 1;
+  uint64 time        = 2;
+}
+
+/**
+ * Multiple WiFi frames (same MAC) detection through time, a time serie
+ */
+message WiFiFrameTimeSerieMsg {
+  WiFiFrameMsg frame   = 1;
+  repeated uint64 time = 3;
+}
+
+/**
+ * Access Point results
+ */
+message AccessPointsReplyMsg {
+  string ssid  = 1;    /// Access Point SSID
+  uint32 count = 2;    /// Number of detected WiFi frames - connection trials - to this Access Point
+}
+
+/**
+ * Bluetooth Frame description
+ */
+message BTFrameMsg {
+  BasicMacMsg info = 1;   /// Basic MAC info
+  string name      = 3;   /// Bluetooth device name
+  string type      = 4;   /// Bluetooth device type
+  enum FrameType {
+    UNKNOWN = 0;
+    PING    = 1;
+    BLIND   = 2;
+  }
+  FrameType frame  = 5;
+}
+
+/**
+ * Single BT frame detection point in time
+ */
+message BTFramePointMsg {
+  BTFrameMsg frame = 1;
+  uint64 time      = 2;
+}
+
+/**
+ * Multiple BT frames (same MAC) detection through time, a time serie
+ */
+message BTFrameTimeSerieMsg {
+  BTFrameMsg frame       = 1;
+  repeated uint64 time   = 5;
+}
+

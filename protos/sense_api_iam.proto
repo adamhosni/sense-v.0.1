@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package sense; 
+
+/**
+ * Represents the device authentification response.
+ * The returned Authentication Token should be used in all 
+ * subsequent calls to the API
+ */
+message DeviceAuthResponse{
+    string AuthJWT = 1; /// Unique Authentification JWT.
+} 
+
+
+/**
+ * Service for handling IAM authentication
+ */
+service IAMService {
+    /// Used to request access using DeviceAuthQuery. Check it and a DeviceAuthResponse will be returned.
+    /// grpc-status is set to 0 if authentication is OK, otherwise it's grpc unauthenticated error status
+    rpc Authenticate( google.protobuf.Empty ) returns ( DeviceAuthResponse ) {}
+}
+

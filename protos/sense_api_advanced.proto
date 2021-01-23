@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package sense; 
+
+/**
+ * Trigger request Message
+ */
+message TriggerRequest{
+    bool   trigger   = 1;
+}
+
+
+/**
+ * Advanced service
+ */
+service AdvancedService {
+    /**
+     * Device Restart
+     */
+    rpc DeviceRestart( TriggerRequest ) returns ( google.protobuf.Empty ) {}
+    /**
+     * Device Factory Reset
+     */
+    rpc DeviceFactoryReset( TriggerRequest ) returns ( google.protobuf.Empty ) {}
+    /**
+     * Web Server Trigger
+     */
+    rpc DeviceWebServerTrigger( TriggerRequest ) returns ( google.protobuf.Empty ) {}
+
+}
+
+

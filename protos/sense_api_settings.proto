@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package sense; 
+
+/**
+ * Represents the device software information.
+ */
+message DeviceInfoMessage{ 
+    string DeviceName = 1;              /// Customized  device name.
+    string DeviceID   = 2 ;             /// Unique  serial number of the device.
+    string DeviceFirmwareVersion = 3;   /// Current installed firmware version on the device.
+    bool    isSetting = 4;              /// Set to true for setting parameters, otherwise it's a query
+}
+
+
+/**
+ * Represents the device diagnostic information.
+ */
+message DeviceDiagnosticsMessage{
+    float CPUTemp      = 1;     /// Temperature of the CPU.
+    float InternalTemp = 2;     /// Internal temperature of the device. 
+    float ExternalTemp = 3;     /// External temperature of the device.
+    float ExtHumidity  = 4;     /// External Humidity of the device.
+    float CPUPerf      = 5;     /// Performance of the CPU.  
+    float RAMUsage     = 6;     /// Usage of the installed RAM. 
+    float HumidityLvl  = 7;     /// Humidity level of the Device.  
+    float HDDUsage     = 8;     /// Disk usage
+    int32 Pressure     = 9;     /// Pressure level
+    float POEAmp       = 10;     /// POE current
+    float POEVolt      = 11;    /// POE Voltage
+    float SysAmp       = 12;    /// System Current
+    float SysVolt      = 13;    /// System Voltage
+    float JackAmp      = 14;    /// Jack Input Current
+    float JackVolt     = 15;    /// Jack Input Voltage
+    float PICeAmp      = 16;    /// PCIe Current
+    float PCIeVolt     = 17;    /// PCIe Voltage
+}
+
+/**
+ * Represents the device ethernet configuration.
+ */
+message DeviceEthernetConfig{
+    bool   DHCPUsage   = 1;     /// Status of the DHCP (Enabled/Disabled).
+    string MACAddress  = 2;     /// Ethernet interface MAC Address. 
+    string IPv4Address = 3;     /// IPv4 Address. 
+    string SubnetMask  = 4;     /// SubnetMask address.  
+    string Array_DNS   = 5;     /// DNS array. 
+    string Gateway     = 6;     /// Gateway address. 
+}
+
+/**
+ * Represents the device 4G configuration.
+ */
+message DeviceLTE4GConfig {
+    enum   Status {
+        NONE    = 0;
+        ONLINE  = 1;
+        OFFLINE = 2;
+    }
+    Status Status4G = 1;        /// Status of the 4G (None/Online/Offline). 
+    string Country  = 2;        /// Country where the device is installed. 
+    string Operator = 3;        /// SIM card Operator. 
+    string APN      = 4;        /// Access point name of the device. 
+    string Username = 5;        /// SIM card username. 
+    string Password = 6;        /// SIM card password.
+    string PINCode  = 7;        /// SIM card PIN Code.
+}
+
+/**
+ * Represents the device location configuration.
+ */
+message DeviceLocationConfig{
+    string Position  = 1;       /// Geolocation position of the device.  
+    double Latitude  = 2;       /// Latitude of the device. 
+    double Longitude = 3;       /// Longitude of the device. 
+    double Height    = 4;       /// Height of the device. 
+    bool   Auto      = 5;       /// True for automatic location, false for manual
+}
+
+/**
+ * Represents the device NTP configuration
+ */
+message DeviceNTPConfig{
+    repeated string NTPHosts    = 1;  /// NTP hosts list
+    repeated string NTPFallback = 2;  /// NTP Fallback hosts list
+    uint32 RootDistanceMaxSec   = 3;  /// Maximum acceptable root distance
+    uint32 PollIntervalMinSec   = 4;  /// Minimum poll intervals for NTP messages
+    uint32 PollIntervalMaxSec   = 5;  /// Maximum poll intervals for NTP messages
+}
+
+message DeviceConfigMessage {
+    enum Config {
+        NONE     = 0;
+        ETHERNET = 1;
+        LTE4G    = 2;
+        LOCATION = 3;
+        NTP      = 4;
+    }
+    Config device_config = 1;
+    oneof device_parameters {
+        DeviceEthernetConfig device_ethernet_config = 2;
+        DeviceLTE4GConfig device_lte4g_config       = 3;
+        DeviceLocationConfig device_location_config = 4;
+        DeviceNTPConfig device_ntp_config           = 5;
+    }
+    bool isSetting = 6;         /// Set to true for setting parameters, therwise it's a query
+}
+
+/**
+ * Service for getting software & diagnostic information  and setting configuration of the Device.
+ * For each RPC, the authorization token generated using IAM service
+ * must be used as value for x-Authorization custom header
+ */
+service DeviceSettings{
+    /// Used to request the device software information. A DeviceInfoMessage will be returned as a response.
+    rpc DeviceInfo ( DeviceInfoMessage ) returns (DeviceInfoMessage) {}
+    
+    /// Used to automatically return a device diagnostic information. 
+    rpc DeviceDiagnostics ( google.protobuf.Empty ) returns (DeviceDiagnosticsMessage) {}
+    
+    /// Used to configure the device ethernet interface. A DeviceEthernetConfig message will be returned as a response.
+    rpc DeviceConfig ( DeviceConfigMessage ) returns (DeviceConfigMessage) {}
+}
+

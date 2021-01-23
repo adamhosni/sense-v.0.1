@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "sense_core_datamodel.proto";
+import "sense_core_datarequest.proto";
+
+package sense;
+
+service DataQuery {
+  rpc fetchAPItems ( APQuery ) returns ( stream AccessPointsReplyMsg ) {};              /// fetch one or more Access Poitns data
+  
+  rpc fetchAPDetails ( APQuery ) returns ( stream WiFiFramePointMsg ) {};               /// fetch WiFi details related to one or more Access Points
+  
+  rpc fetchWiFiItems ( WiFiFrameQuery ) returns ( stream WiFiFramePointMsg ) {};        /// fetch details for one or more WiFi devices detection
+  
+  rpc fetchWiFiTSItems ( WiFiFrameQuery ) returns ( stream WiFiFrameTimeSerieMsg ) {};  /// fetch details for one or more WiFi devices detection - as time series
+  
+  rpc fetchBTItems ( BTFrameQuery ) returns ( stream BTFramePointMsg ) {};              /// fetch details for one or more Bluetooth devices detection
+  
+  rpc fetchBTTSItems ( BTFrameQuery ) returns ( stream BTFrameTimeSerieMsg ) {};        /// fetch details for one or more Bluetooth devices detection - as time series
+}

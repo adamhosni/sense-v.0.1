@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+
+package sense; 
+
+/**
+ * Represents the toolbox command to execute
+ */
+ message ToolboxQuery{
+    enum Tools {
+        NONE       = 0;
+        PING       = 1;
+        NETSTAT    = 2;
+        IPERF      = 3;
+        TRACEROUTE = 4;
+    }
+    Tools command_tool    = 1;     /// The command tool to execute
+
+    enum Interface {
+        UNKNOWN    = 0;
+        ETHERNET   = 1;
+        LTE4G      = 2;
+    }
+    Interface iFace       = 2;     /// The interface to use   
+    
+    bool use_ipv6         = 3;     /// Force IPv6
+    repeated string hosts = 4;     /// The hosts list - should be double checked and sanitized. 
+}
+
+/**
+ * Represents the toolbox command result.
+ */
+ message ToolboxResult{
+    string command_result = 1 ;        /// The toolbox command result.  
+}
+/**
+ * Service for handling toolbox commands : ping, netstat, iperf and traceroute. 
+ */
+ service DeviceToolBox { 
+    rpc ToolboxCommand(ToolboxQuery) returns (stream ToolboxResult) {}
+}

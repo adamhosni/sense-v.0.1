@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package sense;
+
+/**
+ * Time range, milliseconds resolution
+ * Use same from/to for one single point result
+ */
+message TimeRange {
+  uint64 fromEpochMs = 1;  /// Starting time
+  uint64 toEpochMs   = 2;  /// End time
+}
+
+/**
+ * Generic item query
+ * Basis for WiFi/AP/BT queries
+ */
+message ItemQuery {
+  oneof KeyList {
+    string key   = 1;            /// Request Key, uses data index - MAC address for WiFi/BT
+    string regex = 2;            /// Use regex for multiple results
+  }
+  TimeRange timeRange     = 3;   /// Query time range
+  string vendor           = 4;   /// Filter by vendor value
+  string interface        = 5;
+  bool excludeNoDetection = 6;   /// If true, MAC/AP with 0 detections will be ignored
+  uint32 pageNum          = 7;   /// For paged queries, select page to retrieve
+  uint32 itemPerPage      = 8;   /// For paged queries, items per page
+  bool ascOrder           = 9;   /// True for ascending order, descending order otherwise
+}
+
+message WiFiFrameQuery {
+  ItemQuery item  = 1;           /// Generic item query
+  enum FrameType {
+    UNKNOWN = 0;
+    MGMT    = 1;
+    CTRL    = 2;
+    DATA    = 3;
+    RTS     = 4;
+    CTS     = 5;
+    ACK     = 6;
+    OTHER   = 7;
+  }
+  FrameType frame = 2;           /// Filter by WiFi Frame type - non-exhaustive
+  uint32 rssi     = 3;           /// Filter by WiFi RSSI value
+  string ssid     = 4;           /// Filter by Associated SSID - if any
+  enum SortKey {
+    DEFAULT = 0;
+    MAC     = 1;
+    TIME    = 2;
+    VENDOR  = 3;
+    FRAME   = 4;
+    RSSI    = 5;
+    SSID    = 6;
+  }
+  SortKey sortKey = 5;
+}
+
+message APQuery {
+  ItemQuery item  = 1;           /// Generic item query
+  string ssid     = 2;           /// Filter by Associated SSID - if any
+  enum SortKey {
+    DEFAULT = 0;
+    SSID    = 1;
+    TIME    = 2;
+  }
+  SortKey sortKey = 3;
+}
+
+message BTFrameQuery {
+  ItemQuery item = 1;            /// Generic item query
+  string name    = 2;            /// Filter by Bluetooth device name
+  string type    = 3;            /// Filter by Bluetooth device type
+  enum SortKey {
+    DEFAULT = 0;
+    MAC     = 1;
+    TIME    = 2;
+    VENDOR  = 3;
+    NAME    = 4;
+    TYPE    = 5;
+  }
+  SortKey sortKey = 4;
+  enum FrameType {
+    UNKNOWN = 0;
+    PING    = 1;
+    BLIND   = 2;
+  }
+  FrameType frame  = 5;
+}
+

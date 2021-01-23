@@ -1,0 +1,36 @@
+<nb-card size="giant">
+  <nb-tabset fullWidth>
+
+    <nb-tab tabTitle="Detected WiFi devices">
+      <nb-list>
+        <nb-list-item class="contact" *ngFor="let c of contacts">
+          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
+            <span class="caption">{{ c.time | date: 'shortTime' }}</span>
+            <nb-icon icon="wifi-outline" pack="eva"></nb-icon>
+        </nb-list-item>
+      </nb-list>
+    </nb-tab>
+
+    <nb-tab tabTitle="Detected BT devices">
+      <nb-list>
+        <nb-list-item class="contact" *ngFor="let c of recent">
+          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
+                <!-- <span class="caption">{{ c.time | date: 'shortTime' }}</span> -->
+                <nb-icon icon="bluetooth-outline" pack="eva"></nb-icon>
+        </nb-list-item>
+      </nb-list>
+    </nb-tab>
+
+
+    <nb-tab tabTitle="All detected devices">
+      <nb-list>
+        <nb-list-item class="contact" *ngFor="let c of recent">
+          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
+          
+          <span class="caption">{{ c.time | date: 'shortTime' }}</span>
+        </nb-list-item>
+      </nb-list>
+    </nb-tab>
+
+  </nb-tabset>
+</nb-card>
