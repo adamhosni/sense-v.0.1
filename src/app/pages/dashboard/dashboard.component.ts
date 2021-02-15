@@ -179,8 +179,20 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
       auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
   
        this.iamService.authenticate(auth).then(response => {
+<<<<<<< HEAD
         this.authjwt = response;
         // this.GetDeviceInfo();
+=======
+        // console.log(response);
+         this.authjwt = response;
+        // this.GetDeviceInfo();
+        this.GetDeviceDiagnostics();
+        this.ReqAgain = setInterval(() => {this.GetDeviceDiagnostics(); 
+          // console.log(auth);
+          }, 6000);
+
+        // this.getAp();
+>>>>>>> 2d61c3497867a35b5f568e388fe3bb38512928b9
         
         this.GetDeviceDiagnostics();
         this.ReqAgain = setInterval(() => {this.GetDeviceDiagnostics(); 
