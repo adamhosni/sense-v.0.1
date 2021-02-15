@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'ngx-detection-look-up',
   templateUrl: './detection-look-up.component.html',
-  styleUrls: ['./detection-look-up.component.scss']
+  styleUrls: ['./detection-look-up.component.scss'],
 })
 export class DetectionLookUpComponent implements OnInit {
 
@@ -12,7 +12,7 @@ export class DetectionLookUpComponent implements OnInit {
   timeTab: any;
   mac: any;
   initTimeTab: any;
-  rssi:number;
+  rssi: number;
   accuracy: string;
   // ssid: any;
   isAccessPoint: boolean = false;
@@ -21,15 +21,15 @@ export class DetectionLookUpComponent implements OnInit {
   type = 'All';
   types = ['Today', 'Yesterday', 'Last Week', 'Last Month', 'All'];
 
-  selectedWifi:boolean = false;
+  selectedWifi: boolean = false;
 
   ngOnInit(): void {
     this.initTimeTab = this.timeTab;
     // console.log(this.mac);
 
-    if (this.rssi != undefined){ 
-    let txPower = -59 ;
-    let ratio = -this.rssi*1.0/txPower;
+    if (this.rssi !== undefined){
+    const txPower = -59 ;
+    const ratio = -this.rssi*1.0 / txPower;
     this.accuracy =  ((0.89976)*Math.pow(ratio,7.7095) + 0.111).toFixed(2) + ' meters'; 
     this.selectedWifi = true;
     this.isAccessPoint = false;
