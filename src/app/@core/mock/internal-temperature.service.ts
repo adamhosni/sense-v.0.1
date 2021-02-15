@@ -102,18 +102,18 @@ export class ElectricityService extends ElectricityData {
   ];
 
   private chartPoints = [
-    12, 12, 13, 14,
-    15, 16, 17, 16,
-    17, 15, 15, 16,
-    17, 18, 19, 20,
-    20, 21, 20, 20,
-    19, 18, 17, 16,
-    15, 12, 10, 8,
-    12, 12, 13, 12,
-    13, 13, 14, 16,
-    18, 20, 23, 21,
-    21, 19, 17, 15,
-    14, 14, 14,
+    // 12, 12, 13, 14,
+    // 15, 16, 17, 16,
+    // 17, 15, 15, 16,
+    // 17, 18, 19, 20,
+    // 20, 21, 20, 20,
+    // 19, 18, 17, 16,
+    // 15, 12, 10, 8,
+    // 12, 12, 13, 12,
+    // 13, 13, 14, 16,
+    31, 32, 33, 35,
+    38, 39, 38, 39,
+    41, 41, 40,
   ];
 
   chartData: ElectricityChart[];
@@ -132,5 +132,10 @@ export class ElectricityService extends ElectricityData {
 
   getChartData(): Observable<ElectricityChart[]> {
     return observableOf(this.chartData);
+  }
+
+  addChartPoint(p:number) {
+    this.chartPoints.push(p);
+    return this.chartPoints;
   }
 }

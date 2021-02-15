@@ -70,7 +70,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'main-dashboard',
+      redirectTo: 'sense-dashboard',
       pathMatch: 'full',
     },
     {

@@ -1,34 +1,79 @@
 <nb-card size="giant">
+
+  
   <nb-tabset fullWidth>
+    
 
-    <nb-tab tabTitle="Detected WiFi devices">
+    <nb-tab tabTitle="Detected BT devices"
+    [badgeText]="nBTdevice"
+    badgePosition="bottom right"
+    badgeStatus="warning">
+    <nb-form-field>
+      <input type="text" placeholder="Search Device" status="basic" fullWidth nbInput>
+      <button nbSuffix nbButton ghost >
+        <nb-icon icon="search-outline"
+                 pack="eva">
+        </nb-icon>
+      </button>
+    </nb-form-field>
       <nb-list>
-        <nb-list-item class="contact" *ngFor="let c of contacts">
-          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
-            <span class="caption">{{ c.time | date: 'shortTime' }}</span>
-            <nb-icon icon="wifi-outline" pack="eva"></nb-icon>
+        <nb-list-item class="contact" *ngFor="let c of btDevices">
+          <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/bluetooth-outline.png" 
+            [name]="c.mac" 
+            [title]="c.type" 
+            size="large"
+            [badgeText]="c.time.length"
+            badgeStatus="danger"
+            badgePosition="bottom right"></nb-user>
+
+            <span class="caption">{{ c.vendor }}</span>
+            <button nbButton ghost status="danger" (click)="open(c.mac, c.time)">
+              <nb-icon icon="eye-outline" pack="eva"></nb-icon>
+            </button>
         </nb-list-item>
       </nb-list>
     </nb-tab>
 
-    <nb-tab tabTitle="Detected BT devices">
-      <nb-list>
-        <nb-list-item class="contact" *ngFor="let c of recent">
-          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
-                <!-- <span class="caption">{{ c.time | date: 'shortTime' }}</span> -->
-                <nb-icon icon="bluetooth-outline" pack="eva"></nb-icon>
-        </nb-list-item>
-      </nb-list>
+    <nb-tab tabTitle="Detected WiFi devices"
+    [badgeText]="nWFdevices"
+    badgePosition="bottom right"
+    badgeStatus="warning">
+      <nb-list-item class="contact" *ngFor="let c of wfDevices">
+        <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/wifi-outline.png" 
+          [name]="c.mac" 
+          [title]="c.type" 
+          size="large"
+          [badgeText]="c.time.length"
+          badgeStatus="danger"
+          badgePosition="bottom right"></nb-user>
+
+          <span class="caption">{{ c.vendor }}</span>
+          <button nbButton ghost status="danger" (click)="open(c.mac, c.time, c.rssi)">
+            <nb-icon icon="eye-outline" pack="eva"></nb-icon>
+          </button>
+      </nb-list-item>
     </nb-tab>
 
 
-    <nb-tab tabTitle="All detected devices">
+    <nb-tab tabTitle="Access Points"
+      [badgeText]="nAccessPoints"
+      badgePosition="bottom right"
+      badgeStatus="warning">
       <nb-list>
-        <nb-list-item class="contact" *ngFor="let c of recent">
-          <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
-          
-          <span class="caption">{{ c.time | date: 'shortTime' }}</span>
-        </nb-list-item>
+        <nb-list-item class="contact" *ngFor="let c of accessPoints">
+          <nb-user picture="https://www.clipartmax.com/png/small/82-827869_this-emergency-security-device-is-designed-to-get-help-wireless-access-point.png" 
+          [name]="c.ssid" 
+          [title]="c.type" 
+          size="large"
+          [badgeText]="c.time.length"
+          badgeStatus="danger"
+          badgePosition="bottom right"></nb-user>
+
+          <!-- <span class="caption">{{ c.vendor }}</span> -->
+          <button nbButton ghost status="danger" (click)="open(c.mac, c.time, c.ssid)">
+            <nb-icon icon="eye-outline" pack="eva"></nb-icon>
+          </button>
+      </nb-list-item>
       </nb-list>
     </nb-tab>
 

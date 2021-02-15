@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import { grpc } from '@improbable-eng/grpc-web';
 import { NbThemeService } from '@nebular/theme';
 import { DataQueryService } from 'app/@core/mock/grpc/data-query.service';
@@ -150,7 +150,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
     const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
       this.deviceSettingsService.getDeviceDiagnostics(auth).then(response => {
-        console.log(response);
+        // console.log(response);
         this.deviceInfo = response;
         this.cpuperf = this.deviceInfo.cpuperf;
         this.cputemp = this.deviceInfo.cputemp;
@@ -170,35 +170,24 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   
   }
   
-  getAp(){
   
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.daraQueryService.getAP(auth);
-       // console.log(response);
-       // this.deviceInfo = response;    
-  
-  
-  }
-  
+
+
     logIn(): any{
   
       const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
   
        this.iamService.authenticate(auth).then(response => {
-        // console.log(response);
-         this.authjwt = response;
+        this.authjwt = response;
         // this.GetDeviceInfo();
+        
         this.GetDeviceDiagnostics();
         this.ReqAgain = setInterval(() => {this.GetDeviceDiagnostics(); 
-          // console.log(auth);
-          }, 6000);
-
-        // this.getAp();
-        
-        //return response;      
+          }, 8000);
+ 
       });
+      
     }
     
 }

@@ -118,7 +118,7 @@ ngAfterViewInit(): void{
         </table>\
         <div class="button-center"><button id="button-wifi" class="button-range" type="button">Wifi Range</button>\
         <button id="button-bth" class="button-range" type="button">Bluetooth Range</button></div>\
-        <p><button id="button-details" class="button-details" type="button">Device Details</button>\
+        <p><button id="button-details" class="button-details" type="button">Device Dashboard</button>\
       </form>';
         this.addMarker(latLng, template, true);
         
@@ -181,9 +181,20 @@ centerLeafletMapOnMarker(map, marker) {
 
   document.getElementById("button-details").addEventListener("click", Event => {
     var sensor = this.getSensorByLatLng(latLng);
-    //this.goToDash(sensor);
+    this.goToDash(sensor);
   });
   
+}
+
+goToDash(sensor ){
+  
+  this.router.navigate(['sense-dashboard',sensor]).then( (e) => {
+    if (e) {
+      console.log("Navigation Successful");
+    } else {
+      console.log("Navigation has failed!");
+    }
+  });
 }
 
 getSensorByLatLng(latLng){

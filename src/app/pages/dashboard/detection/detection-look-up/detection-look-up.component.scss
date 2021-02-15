@@ -1,0 +1,24 @@
+// @import '../../../@theme/styles/themes';
+
+// @include nb-install-component() {
+
+  nb-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  nb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: nb-theme(card-header-with-select-padding-top);
+    padding-bottom: nb-theme(card-header-with-select-padding-bottom);
+    margin-bottom: -1px;
+  }
+  /deep/ .cdk-global-scrollblock {
+    position: static !important;
+    }
+
+    /deep/ .keywords{
+      color: rgb(248, 79, 79);
+    }

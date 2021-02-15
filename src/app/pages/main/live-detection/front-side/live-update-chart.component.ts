@@ -100,7 +100,7 @@ export class LiveUpdateChartComponent implements AfterViewInit, OnDestroy, OnCha
         backgroundColor: earningLineTheme.tooltipBg,
         borderColor: earningLineTheme.tooltipBorderColor,
         borderWidth: earningLineTheme.tooltipBorderWidth,
-        formatter: params => `$ ${Math.round(parseInt(params.value[1], 10))}`,
+        formatter: params => `${Math.round(parseInt(params.value[1], 10))} Devices`,
         extraCssText: earningLineTheme.tooltipExtraCss,
       },
       series: [

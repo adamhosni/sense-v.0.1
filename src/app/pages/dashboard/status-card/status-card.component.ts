@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ngx-status-card',
@@ -18,10 +18,18 @@ import { Component, Input } from '@angular/core';
     </nb-card>
   `,
 })
-export class StatusCardComponent {
+export class StatusCardComponent implements AfterViewInit{
 
   @Input() title: string;
   @Input() type: string;
   @Input() value: string;
   @Input() on = true;
+
+
+  ngAfterViewInit(){
+
+    // if (this.value == '-- °C'){
+    //   this.on = false;
+    // }
+  }
 }
