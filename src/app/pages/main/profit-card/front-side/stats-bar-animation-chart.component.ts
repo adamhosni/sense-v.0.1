@@ -50,7 +50,7 @@ export class StatsBarAnimationChartComponent implements AfterViewInit, OnDestroy
         chartVariables.firstAnimationBarColor,
         chartVariables.secondAnimationBarColor,
       ],
-      grid: {
+      grdeviceNumber: {
         left: 0,
         top: 0,
         right: 0,

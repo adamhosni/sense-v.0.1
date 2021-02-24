@@ -59,7 +59,7 @@ export class ProfitChartComponent implements AfterViewInit, OnDestroy, OnChanges
           },
         },
       },
-      grid: {
+      grdeviceNumber: {
         left: '3%',
         right: '4%',
         bottom: '3%',

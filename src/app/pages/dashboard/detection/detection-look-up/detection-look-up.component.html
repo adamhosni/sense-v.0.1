@@ -5,8 +5,8 @@
   <span *ngIf = "!isAccessPoint">{{mac}} detected <b class="keywords">{{timeTab.length}} times </b> </span>
   <span *ngIf = "selectedWifi && timeTab.length != 0 && !isAccessPoint">&nbsp;on a range of <b class="keywords">{{accuracy}}</b></span>
 
-  <span *ngIf = "isAccessPoint">SSID: {{rssi}} Detected <b class="keywords">{{timeTab.length}}  times&nbsp;&nbsp;&nbsp;</b> </span>
-<!-- rssi above means  -->
+  <span *ngIf = "isAccessPoint">SSdeviceNumber: {{rssi}} Detected <b class="keywords">{{timeTab.length}}  times&nbsp;&nbsp;&nbsp;</b> </span>
+<!-- rssi above means  ssid-->
   &nbsp;&nbsp;&nbsp;<nb-select size="tiny" [(selected)]="type" (selectedChange)="changeTimeline($event)">
     <nb-option *ngFor="let t of types" [value]="t">{{ t }}</nb-option>
   </nb-select>

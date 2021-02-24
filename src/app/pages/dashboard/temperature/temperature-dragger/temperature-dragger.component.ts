@@ -109,7 +109,7 @@ export class TemperatureDraggerComponent implements AfterViewInit, OnChanges {
   }
 
   // STopped the fuctionality of Drag
-  
+
   // mouseDown(event) {
   //   this.isMouseDown = true;
   //   if (!this.off) {

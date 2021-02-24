@@ -415,7 +415,7 @@ proto.sense.WiFiFrameMsg.toObject = function(includeInstance, msg) {
     info: (f = msg.getInfo()) && proto.sense.BasicMacMsg.toObject(includeInstance, f),
     frame: jspb.Message.getFieldWithDefault(msg, 2, 0),
     rssi: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    ssid: jspb.Message.getFieldWithDefault(msg, 4, "")
+    ssdeviceNumber: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -1055,7 +1055,7 @@ proto.sense.AccessPointsReplyMsg.prototype.toObject = function(opt_includeInstan
  */
 proto.sense.AccessPointsReplyMsg.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ssid: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    ssdeviceNumber: jspb.Message.getFieldWithDefault(msg, 1, ""),
     count: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 

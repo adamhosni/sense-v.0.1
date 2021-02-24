@@ -17,7 +17,8 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
+// import { NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
+// import { FilterPipe } from './@theme/pipes';
 
 
 const formSetting: any = {
@@ -45,6 +46,7 @@ const formSetting: any = {
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
     NbEvaIconsModule,
+    // FilterPipe
   //   NbAuthModule.forRoot({
   //     strategies: [
   //       NbPasswordAuthStrategy.setup({
@@ -76,8 +78,8 @@ const formSetting: any = {
   //            redirectDelay: 0,
   //          },
   //     },
-  //   }), 
-    
+  //   }),
+
   ],
   bootstrap: [AppComponent],
 })

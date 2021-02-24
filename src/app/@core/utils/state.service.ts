@@ -11,18 +11,18 @@ export class StateService implements OnDestroy {
     {
       name: 'One Column',
       icon: 'nb-layout-default',
-      id: 'one-column',
+      deviceNumber: 'one-column',
       selected: true,
     },
     {
       name: 'Two Column',
       icon: 'nb-layout-two-column',
-      id: 'two-column',
+      deviceNumber: 'two-column',
     },
     {
       name: 'Center Column',
       icon: 'nb-layout-centre',
-      id: 'center-column',
+      deviceNumber: 'center-column',
     },
   ];
 
@@ -30,13 +30,13 @@ export class StateService implements OnDestroy {
     {
       name: 'Sidebar at layout start',
       icon: 'nb-layout-sidebar-left',
-      id: 'start',
+      deviceNumber: 'start',
       selected: true,
     },
     {
       name: 'Sidebar at layout end',
       icon: 'nb-layout-sidebar-right',
-      id: 'end',
+      deviceNumber: 'end',
     },
   ];
 

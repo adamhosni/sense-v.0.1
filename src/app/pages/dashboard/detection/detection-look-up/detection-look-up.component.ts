@@ -14,7 +14,7 @@ export class DetectionLookUpComponent implements OnInit {
   initTimeTab: any;
   rssi: number;
   accuracy: string;
-  // ssid: any;
+  // ssdeviceNumber: any;
   isAccessPoint: boolean = false;
   isFound: boolean = false;
 
@@ -30,19 +30,19 @@ export class DetectionLookUpComponent implements OnInit {
     if (this.rssi !== undefined){
     const txPower = -59 ;
     const ratio = -this.rssi*1.0 / txPower;
-    this.accuracy =  ((0.89976)*Math.pow(ratio,7.7095) + 0.111).toFixed(2) + ' meters'; 
+    this.accuracy =  ((0.89976)*Math.pow(ratio,7.7095) + 0.111).toFixed(2) + ' meters';
     this.selectedWifi = true;
     this.isAccessPoint = false;
-    
+
   }
   let typeOfMac = typeof this.mac;
-  
-  if (typeOfMac == 'object') 
+
+  if (typeOfMac == 'object')
     this.isAccessPoint = true;
   }
 
   changeTimeline($event){
-    
+
 
     if ($event == 'Today'){
 
@@ -50,7 +50,7 @@ export class DetectionLookUpComponent implements OnInit {
       const filterToday = this.initTimeTab.filter(obj => new Date(obj).setHours(0,0,0,0) === today);
       this.timeTab = filterToday;
       // console.log(this.timeTab);
-    }else 
+    }else
     if ($event == 'Yesterday'){
 
       const yesterday = new Date();
@@ -76,11 +76,11 @@ export class DetectionLookUpComponent implements OnInit {
       const filterlastMonth = this.initTimeTab.filter(obj => new Date(obj).setHours(0,0,0,0) >= lastMonth.setHours(0,0,0,0));
       this.timeTab = filterlastMonth;
     }
-    
+
     else{
       this.timeTab = this.initTimeTab;
     }
-    
+
   }
 
 }

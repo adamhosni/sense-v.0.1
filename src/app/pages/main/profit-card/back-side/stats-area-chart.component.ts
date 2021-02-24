@@ -41,7 +41,7 @@ export class StatsAreaChartComponent implements AfterViewInit, OnDestroy {
         const trafficTheme: any = config.variables.traffic;
 
         this.option = Object.assign({}, {
-          grid: {
+          grdeviceNumber: {
             left: 0,
             top: 0,
             right: 0,

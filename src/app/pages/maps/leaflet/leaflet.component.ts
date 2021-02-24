@@ -55,7 +55,7 @@ export class LeafletComponent implements AfterViewInit{
 
   wRangeExist : boolean = false;
   bRangeExist : boolean = false;
-  
+
   smallIcon = new L.Icon({
     iconUrl: 'marker-icon.png',
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-icon-2x.png',
@@ -121,7 +121,7 @@ ngAfterViewInit(): void{
         <p><button id="button-details" class="button-details" type="button">Device Dashboard</button>\
       </form>';
         this.addMarker(latLng, template, true);
-        
+
       });
   }
 
@@ -144,7 +144,7 @@ ngAfterViewInit(): void{
 }
 
 centerLeafletMapOnMarker(map, marker) {
-  
+
   var latLng = [ marker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLng);
 
@@ -166,7 +166,7 @@ centerLeafletMapOnMarker(map, marker) {
     opacity: 0.6,
   })
 
-  if (!map.getBounds().equals(markerBounds)){ 
+  if (!map.getBounds().equals(markerBounds)){
     map.flyToBounds(markerBounds, {'duration':1, 'animate':true, 'maxZoom':16} );
     console.log(map.getBounds().equals(markerBounds));
   }
@@ -174,7 +174,7 @@ centerLeafletMapOnMarker(map, marker) {
   document.getElementById("button-wifi").addEventListener("click", Event => {
     this.showWifiRange(map, this.wRangeExist, marker, wifiRange);
   });
-  
+
   document.getElementById("button-bth").addEventListener("click", Event => {
     this.showBluetoothRange(map, this.bRangeExist, bthRange);
   });
@@ -183,11 +183,11 @@ centerLeafletMapOnMarker(map, marker) {
     var sensor = this.getSensorByLatLng(latLng);
     this.goToDash(sensor);
   });
-  
+
 }
 
 goToDash(sensor ){
-  
+
   this.router.navigate(['sense-dashboard',sensor]).then( (e) => {
     if (e) {
       console.log("Navigation Successful");
@@ -230,7 +230,7 @@ showWifiRange (map, rangeExist, marker, wifiRange){
   <button id="wifiDetails" class="wifiDetails" type="button">More Details</button>\
   ';
   var customOptions = {'maxWidth': 500,'className': 'wifiCustom'};
-  
+
   if (rangeExist) {
     this.deleteWifiRange(map, rangeExist, wifiRange);
     console.log(rangeExist);
@@ -243,7 +243,7 @@ showWifiRange (map, rangeExist, marker, wifiRange){
      .querySelector(".wifiDetails")
      .addEventListener("click", e => {
        this.showMoreWifi(map, marker, wifiRange);
-       
+
 
      });
   });
@@ -254,16 +254,16 @@ showWifiRange (map, rangeExist, marker, wifiRange){
 }
 
  open(hasBackdrop: boolean, deviceId: string, listWifis: any) {
-   
-  this.dialogService.open(GmapsComponent, { 
+
+  this.dialogService.open(GmapsComponent, {
     hasBackdrop,
     dialogClass: 'model-full',
     closeOnBackdropClick:true,
-    
+
     context: {
      // title: 'Enter template name',
       deviceId: deviceId,
-      listWifis: listWifis, 
+      listWifis: listWifis,
       map: this.map,
     },  });
 }
@@ -272,7 +272,7 @@ showWifiRange (map, rangeExist, marker, wifiRange){
 showMoreWifi(map, marker, wifiRange){
   console.log("BTN Works");
   this.deleteWifiRange(map, 1, wifiRange);
-  
+
   var wifi500 = L.circle(marker.getLatLng(), {
     color: 'yellow',
     fillColor: 'yellow',
@@ -323,7 +323,7 @@ showBluetoothRange (map, rangeExist, bthRange){
   }
 }
 
-  
+
 
 
 
@@ -612,7 +612,7 @@ showBluetoothRange (map, rangeExist, bthRange){
       desc: "Information about sensor 6",
       id: "P59"
     }
-    
+
 
     return [sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sensor7, sensor8, sensor9, sensor10, sensor11, sensor12, sensor13, sensor14, sensor15
       , sensor16, sensor17, sensor18, sensor19, sensor20, sensor21, sensor22, sensor23, sensor24, sensor25, sensor26, sensor27, sensor28, sensor29

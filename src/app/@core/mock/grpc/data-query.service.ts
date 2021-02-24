@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { grpc } from '@improbable-eng/grpc-web';
 import { DataQueryClient, ResponseStream } from 'app/@protos/sense_api_dataquery_pb_service';
 import { AccessPointsReplyMsg, BasicMacMsg, BTFramePointMsg, WiFiFramePointMsg } from 'app/@protos/sense_core_datamodel_pb';
-import { APQuery, BTFrameQuery, ItemQuery, WiFiFrameQuery } from 'app/@protos/sense_core_datarequest_pb';
+import { APQuery, BTFrameQuery, ItemQuery, TimeRange, WiFiFrameQuery } from 'app/@protos/sense_core_datarequest_pb';
 
 
 
@@ -24,30 +24,53 @@ export class DataQueryService {
     this.client = new DataQueryClient('http://84.209.75.2:8000');
 
     this.requestMsgAP = new APQuery ();
+    this.requestMsgAP.setSortkey(1);
     this.requestMsgBTF = new BTFrameQuery ();
     this.requestMsgWiFi = new WiFiFrameQuery ();
 
     // this.requestMsgAP = new APQuery().setSortkey(aa);
    }
 
-   fetchAPItems(metadata: grpc.Metadata) : Promise <AccessPointsReplyMsg>{
+   fetchAPItems(metadata: grpc.Metadata) : Promise <Array<any>>{
      var allAP = []
+     var today = new Date();
     //  this.requestMsgAP.setSsid('Get-2G-F5DBBD');
     // var item = new ItemQuery();
     // item.setAscorder(false);
-    // item.setKey(2);
-    //  this.requestMsgAP.setItem(item);
-     return new Promise(async (resolve, reject) =>{
 
+
+    //  let timeRange = new TimeRange();
+    //  timeRange.setFromepochms(today.setDate(today.getDate() - 1));
+    //  console.log(timeRange.toObject());
+
+    //  timeRange.setToepochms(today.getTime());
+    //  console.log(timeRange.toObject());
+
+
+    //  let item = new ItemQuery();
+    //  item.setAscorder(false); // Ascendant order if true
+    //  item.setTimerange(timeRange); // Time Range for fetching AP
+    //  item.setInterface('wlan3') // Interface for connexion
+    //  item.setKey('b6:73:c7:41:58:c5'); // Key must be mac @
+
+    //  this.requestMsgAP.setItem(item);
+    //  this.requestMsgAP.setSortkey(2);
+    //  this.requestMsgAP.set
+    //  console.log(item.toObject());
+
+
+     return new Promise(async (resolve, reject) =>{
+      let a = [];
       const stream = this.client.fetchAPItems(this.requestMsgAP, metadata);
       stream.on('data', (replyMessage : AccessPointsReplyMsg) => {
 
-        console.log(replyMessage);
+        console.log(replyMessage.toObject());
+        a.push(replyMessage.toObject());
 
       });
       stream.on('end',function(){
-        console.log(resolve);
-        // resolve(replyMessage)
+        // console.log(resolve);
+        resolve(a)
       });
       stream.on('status',function(){
         console.log(reject);
@@ -56,18 +79,18 @@ export class DataQueryService {
 
    }
 
-   
+
 
 
    fetchBTItems(metadata: grpc.Metadata) : Promise <Array<any>>{
     var allMac = [];
-    
+
 
     return new Promise(async (resolve, reject) =>{
 
      const stream = this.client.fetchBTItems(this.requestMsgBTF, metadata);
      stream.on('data', (replyMessage : BTFramePointMsg) => {
-       
+
       var dateDetection = new Date(replyMessage.getTime());
 
       var macMsg = new BasicMacMsg();
@@ -87,7 +110,7 @@ export class DataQueryService {
        }
       allMac.push(macDet);
 
-     }); 
+     });
 
 
 
@@ -101,7 +124,7 @@ export class DataQueryService {
         }
         this[a.mac].time.push(a.time);
     }, Object.create(null));
-    
+
     console.log(result);
     resolve(result);
   });
@@ -109,7 +132,7 @@ export class DataQueryService {
       //  console.log(reject);
      });
     });
-    
+
 
   }
 
@@ -130,28 +153,30 @@ export class DataQueryService {
        var ssid = replyMessage.getFrame().getSsid();
 
 
+      //  console.log(replyMessage.getFrame().getFrame());
+
        var macDet = {
         mac : mac.toUpperCase(),
         time : dateDetection,
         vendor: vendor,
         rssi: rssi,
-        ssid: ssid
+        ssdeviceNumber: ssid
       }
       allMac.push(macDet);
-       
-       
+
+
      });
        stream.on('end',function(){
-       
+
         var result = [];
        allMac.forEach(function (a) {
         if (!this[a.mac]) {
-            this[a.mac] = { mac: a.mac, rssi: a.rssi, vendor: a.vendor, ssid: a.ssid, time: [] };
+            this[a.mac] = { mac: a.mac, rssi: a.rssi, vendor: a.vendor, ssdeviceNumber: a.ssid, time: [] };
             result.push(this[a.mac]);
         }
         this[a.mac].time.push(a.time);
     }, Object.create(null));
-    
+
     console.log(result);
     resolve(result);
 
@@ -183,24 +208,24 @@ export class DataQueryService {
         time : dateDetection,
         vendor: vendor,
         rssi: rssi,
-        ssid: ssid
+        ssdeviceNumber: ssid
       }
       allMac.push(macDet);
-       
-       
+
+
      });
        stream.on('end',function(){
-       
+
         var result = [];
        allMac.forEach(function (a) {
         if (!this[a.ssid]) {
-            this[a.ssid] = { ssid: a.ssid, mac: [], vendor: a.vendor, rssi: a.rssi, time: [] };
+            this[a.ssid] = { ssdeviceNumber: a.ssid, mac: [], vendor: a.vendor, rssi: a.rssi, time: [] };
             result.push(this[a.ssid]);
         }
         this[a.ssid].time.push(a.time);
         this[a.ssid].mac.push(a.mac);
     }, Object.create(null));
-    
+
     console.log(result);
     resolve(result);
 

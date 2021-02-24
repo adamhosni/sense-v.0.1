@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './gmaps.component.html',
 })
 export class GmapsComponent {
-  
+
   deviceId: string;
   listWifis;
   map;
@@ -19,15 +19,15 @@ export class GmapsComponent {
       this.map.removeLayer(listWifis.wifi100);
       this.map.removeLayer(listWifis.wifi300);
       this.map.removeLayer(listWifis.wifi500);
-      console.log ('deleted') 
-      this.rangesExist = true;  
- 
+      console.log ('deleted')
+      this.rangesExist = true;
+
   }
 
   showWifiRanges(listWifis){
     listWifis.wifi100.addTo(this.map);
     listWifis.wifi300.addTo(this.map);
     listWifis.wifi500.addTo(this.map);
-    this.rangesExist = false; 
+    this.rangesExist = false;
   }
 }

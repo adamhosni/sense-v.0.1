@@ -1,15 +1,15 @@
 <nb-card size="giant">
 
-  
+
   <nb-tabset fullWidth>
-    
+
 
     <nb-tab tabTitle="Detected BT devices"
     [badgeText]="nBTdevice"
     badgePosition="bottom right"
     badgeStatus="warning">
     <nb-form-field>
-      <input type="text" placeholder="Search Device" status="basic" fullWidth nbInput>
+      <input type="text" placeholder="Search device by mac@ " status="basic" [(ngModel)]="searchText" fullWidth nbInput>
       <button nbSuffix nbButton ghost >
         <nb-icon icon="search-outline"
                  pack="eva">
@@ -17,10 +17,10 @@
       </button>
     </nb-form-field>
       <nb-list>
-        <nb-list-item class="contact" *ngFor="let c of btDevices">
-          <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/bluetooth-outline.png" 
-            [name]="c.mac" 
-            [title]="c.type" 
+        <nb-list-item class="contact" *ngFor="let c of btDevices | appFilter: searchText : 'mac'">
+          <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/bluetooth-outline.png"
+            [name]="c.mac"
+            [title]="c.type"
             size="large"
             [badgeText]="c.time.length"
             badgeStatus="danger"
@@ -39,15 +39,19 @@
     badgePosition="bottom right"
     badgeStatus="warning">
       <nb-list-item class="contact" *ngFor="let c of wfDevices">
-        <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/wifi-outline.png" 
-          [name]="c.mac" 
-          [title]="c.type" 
+        <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/wifi-outline.png"
+          [name]="c.mac"
+          [title]="c.type"
           size="large"
           [badgeText]="c.time.length"
           badgeStatus="danger"
           badgePosition="bottom right"></nb-user>
 
-          <span class="caption">{{ c.vendor }}</span>
+          <div class="centerSpans">
+            <span class="caption">{{ c.ssid }} | </span>
+            <span class="caption">{{ c.vendor }}</span>
+          </div>
+
           <button nbButton ghost status="danger" (click)="open(c.mac, c.time, c.rssi)">
             <nb-icon icon="eye-outline" pack="eva"></nb-icon>
           </button>
@@ -59,11 +63,28 @@
       [badgeText]="nAccessPoints"
       badgePosition="bottom right"
       badgeStatus="warning">
+
+      <nb-form-field size="large">
+        <input type="text" placeholder="Search Device" status="basic" fullWidth nbInput>
+        <button nbSuffix nbButton ghost >
+          <nb-icon icon="search-outline"
+                   pack="eva">
+          </nb-icon>
+        </button>
+        <button nbSuffix nbButton ghost >
+          <nb-icon icon="plus-circle-outline"
+                   pack="eva">
+          </nb-icon>
+        </button>
+
+      </nb-form-field>
+
+
       <nb-list>
         <nb-list-item class="contact" *ngFor="let c of accessPoints">
-          <nb-user picture="https://www.clipartmax.com/png/small/82-827869_this-emergency-security-device-is-designed-to-get-help-wireless-access-point.png" 
-          [name]="c.ssid" 
-          [title]="c.type" 
+          <nb-user picture="https://www.clipartmax.com/png/small/82-827869_this-emergency-security-device-is-designed-to-get-help-wireless-access-point.png"
+          [name]="c.ssid"
+          [title]="c.type"
           size="large"
           [badgeText]="c.time.length"
           badgeStatus="danger"

@@ -33,6 +33,10 @@
     }
   }
 
+  .centerSpans{
+    text-align: center;
+  }
+
 
   ::ng-deep .modal-full {
     // position: absolute !important;
@@ -41,12 +45,12 @@
     top: 20% !important;
     left: 10% !important;
     margin: 0 0 0 -150px !important;
-  
+
     .cdk-visually-hidden {
       width: 99% !important;
       height: 99% !important;
     }
-  
+
     nb-dialog-container {
       width: 100% !important;
       height: 100% !important;

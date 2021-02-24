@@ -125,7 +125,7 @@ export namespace WiFiFrameQuery {
     item?: ItemQuery.AsObject,
     frame: WiFiFrameQuery.FrameTypeMap[keyof WiFiFrameQuery.FrameTypeMap],
     rssi: number,
-    ssid: string,
+    ssdeviceNumber: string,
     sortkey: WiFiFrameQuery.SortKeyMap[keyof WiFiFrameQuery.SortKeyMap],
   }
 
@@ -149,7 +149,7 @@ export namespace WiFiFrameQuery {
     VENDOR: 3;
     FRAME: 4;
     RSSI: 5;
-    SSID: 6;
+    SSdeviceNumber: 6;
   }
 
   export const SortKey: SortKeyMap;
@@ -180,13 +180,13 @@ export class APQuery extends jspb.Message {
 export namespace APQuery {
   export type AsObject = {
     item?: ItemQuery.AsObject,
-    ssid: string,
+    ssdeviceNumber: string,
     sortkey: APQuery.SortKeyMap[keyof APQuery.SortKeyMap],
   }
 
   export interface SortKeyMap {
     DEFAULT: 0;
-    SSID: 1;
+    SSdeviceNumber: 1;
     TIME: 2;
   }
 

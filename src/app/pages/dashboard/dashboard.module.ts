@@ -28,6 +28,7 @@ import { TrafficChartComponent } from './traffic/traffic-chart.component';
 import { FormsModule } from '@angular/forms';
 import { DetectionComponent } from './detection/detection.component';
 import { DetectionLookUpComponent } from './detection/detection-look-up/detection-look-up.component';
+// import { FilterPipe } from 'app/@theme/pipes';
 
 @NgModule({
   imports: [
@@ -46,7 +47,7 @@ import { DetectionLookUpComponent } from './detection/detection-look-up/detectio
     NgxEchartsModule,
     NbSearchModule,
     NbInputModule,
-    NbFormFieldModule
+    NbFormFieldModule,
   ],
   declarations: [
     DashboardComponent,

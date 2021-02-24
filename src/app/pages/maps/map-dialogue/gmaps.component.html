@@ -1,5 +1,5 @@
 <nb-card status="success" size = "large">
-  <nb-card-header>Device ID: {{deviceId}}</nb-card-header>
+  <nb-card-header>Device deviceNumber: {{deviceId}}</nb-card-header>
   <nb-card-body large>
 
     <nb-accordion multi>
@@ -12,7 +12,7 @@
           <p></p>
         </nb-accordion-item-body>
       </nb-accordion-item>
-    
+
       <nb-accordion-item>
         <nb-accordion-item-header>
           Detection Details
@@ -23,7 +23,7 @@
          <p><nb-icon icon="square" status="warning"></nb-icon> 500 meters: <span>7 </span>Devices</p>
         </nb-accordion-item-body>
       </nb-accordion-item>
-    
+
       <nb-accordion-item>
         <nb-accordion-item-header>
           Edit
@@ -35,9 +35,9 @@
         </nb-accordion-item-body>
       </nb-accordion-item>
     </nb-accordion>
-    
-    
-    
+
+
+
   </nb-card-body>
   <nb-card-footer>
     <button nbButton hero status="success" (click)="deleteWifiRanges(listWifis)" [disabled]="rangesExist">Delete Ranges</button>

@@ -41,6 +41,9 @@ import { LivePieChartComponent } from './live-detection/back-side/live-pie-chart
 import { LiveUpdateChartComponent } from './live-detection/front-side/live-update-chart.component';
 import { LiveCardFrontComponent } from './live-detection/front-side/live-card-front.component';
 import { LiveCardBackComponent } from './live-detection/back-side/live-card-back.component';
+import { SmartTableComponent } from './smart-table/smart-table.component';
+
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule({
   imports: [
@@ -57,6 +60,7 @@ import { LiveCardBackComponent } from './live-detection/back-side/live-card-back
     NgxEchartsModule,
     NgxChartsModule,
     LeafletModule,
+    Ng2SmartTableModule,
   ],
   declarations: [
     MainComponent,
@@ -70,6 +74,7 @@ import { LiveCardBackComponent } from './live-detection/back-side/live-card-back
     OrdersChartComponent,
     ProfitChartComponent,
     StatsCardBackComponent,
+    SmartTableComponent,
     // TrafficRevealCardComponent,
     // TrafficBarChartComponent,
     // TrafficFrontCardComponent,

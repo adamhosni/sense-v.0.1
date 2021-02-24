@@ -204,7 +204,7 @@ proto.sense.DeviceInfoMessage.prototype.toObject = function(opt_includeInstance)
 proto.sense.DeviceInfoMessage.toObject = function(includeInstance, msg) {
   var f, obj = {
     devicename: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    deviceid: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    devicedeviceNumber: jspb.Message.getFieldWithDefault(msg, 2, ""),
     devicefirmwareversion: jspb.Message.getFieldWithDefault(msg, 3, ""),
     issetting: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };

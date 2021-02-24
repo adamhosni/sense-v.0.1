@@ -30,7 +30,7 @@ export class DeviceInfoMessage extends jspb.Message {
 export namespace DeviceInfoMessage {
   export type AsObject = {
     devicename: string,
-    deviceid: string,
+    devicedeviceNumber: string,
     devicefirmwareversion: string,
     issetting: boolean,
   }

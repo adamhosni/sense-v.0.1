@@ -61,7 +61,7 @@ export namespace WiFiFrameMsg {
     info?: BasicMacMsg.AsObject,
     frame: WiFiFrameMsg.FrameTypeMap[keyof WiFiFrameMsg.FrameTypeMap],
     rssi: number,
-    ssid: string,
+    ssdeviceNumber: string,
   }
 
   export interface FrameTypeMap {
@@ -151,7 +151,7 @@ export class AccessPointsReplyMsg extends jspb.Message {
 
 export namespace AccessPointsReplyMsg {
   export type AsObject = {
-    ssid: string,
+    ssdeviceNumber: string,
     count: number,
   }
 }

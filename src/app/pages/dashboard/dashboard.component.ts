@@ -116,17 +116,17 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         this.solarValue = data;
       });
 
-      this.logIn();console.log(this.cputemp);
+      this.logIn();
   }
 
   ngAfterViewInit(){
-    
-    
-    
+
+
+
     // this.logIn();
     // console.log(this.authjwt);
-    
-    
+
+
   }
   ngOnDestroy() {
     this.alive = false;
@@ -134,19 +134,27 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   }
 
 
-  GetDeviceInfo(){
+  getDeviceInfo(){
     const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
       this.deviceSettingsService.getDeviceInfo(auth).then(response => {
         //console.log(response);
-       // this.deviceInfo = response;    
+       // this.deviceInfo = response;
       });
-  
   }
-  
-  GetDeviceDiagnostics(): any{
+
+  deviceConfig(){
+    const auth = new grpc.Metadata();
+      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
+      this.deviceSettingsService.deviceConfig(auth).then(response => {
+        console.log(response);
+       // this.deviceInfo = response;
+      });
+  }
+
+  getDeviceDiagnostics(): any{
     // console.log('ttt');
-  
+
     const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
       this.deviceSettingsService.getDeviceDiagnostics(auth).then(response => {
@@ -167,27 +175,27 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         this.memUsaCard.value = this.ramusage.toFixed(2) +' %';
         this.harDisCard.value = this.hddusage +' %';
       });
-  
+
   }
-  
-  
+
+
 
 
     logIn(): any{
-  
+
       const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
-  
+
        this.iamService.authenticate(auth).then(response => {
         this.authjwt = response;
-        // this.GetDeviceInfo();
+        this.deviceConfig();
 
-        this.GetDeviceDiagnostics();
-        this.ReqAgain = setInterval(() => {this.GetDeviceDiagnostics(); 
+        this.getDeviceDiagnostics();
+        this.ReqAgain = setInterval(() => {this.getDeviceDiagnostics();
           }, 8000);
- 
+
       });
-      
+
     }
-    
+
 }
