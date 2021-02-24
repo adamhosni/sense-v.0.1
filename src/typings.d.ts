@@ -3,7 +3,7 @@
 /* SystemJS module definition */
 declare var module: NodeModule;
 interface NodeModule {
-  deviceNumber: string;
+  id: string;
 }
 
 declare var tinymce: any;

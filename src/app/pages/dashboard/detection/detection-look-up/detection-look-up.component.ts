@@ -14,7 +14,7 @@ export class DetectionLookUpComponent implements OnInit {
   initTimeTab: any;
   rssi: number;
   accuracy: string;
-  // ssdeviceNumber: any;
+  // ssid: any;
   isAccessPoint: boolean = false;
   isFound: boolean = false;
 

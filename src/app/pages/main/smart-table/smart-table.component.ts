@@ -55,10 +55,10 @@ export class SmartTableComponent {
 
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(private service: SmartTableData) {
-    const data = this.service.getData();
-    this.source.load(data);
-  }
+  // constructor(private service: SmartTableData) {
+  //   const data = this.service.getData();
+  //   this.source.load(data);
+  // }
 
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {

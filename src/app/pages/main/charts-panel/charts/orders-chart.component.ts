@@ -58,7 +58,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
 
   setOptions(eTheme) {
     this.option = {
-      grdeviceNumber: {
+      grid: {
         left: 40,
         top: 20,
         right: 0,

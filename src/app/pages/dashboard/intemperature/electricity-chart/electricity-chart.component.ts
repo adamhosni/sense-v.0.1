@@ -44,7 +44,7 @@ export class ElectricityChartComponent implements AfterViewInit, OnDestroy {
         const eTheme: any = config.variables.electricity;
 
         this.option = {
-          grdeviceNumber: {
+          grid: {
             left: 0,
             top: 0,
             right: 0,

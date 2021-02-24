@@ -776,7 +776,7 @@ proto.sense.WiFiFrameQuery.toObject = function(includeInstance, msg) {
     item: (f = msg.getItem()) && proto.sense.ItemQuery.toObject(includeInstance, f),
     frame: jspb.Message.getFieldWithDefault(msg, 2, 0),
     rssi: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    ssdeviceNumber: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    ssid: jspb.Message.getFieldWithDefault(msg, 4, ""),
     sortkey: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
@@ -927,7 +927,7 @@ proto.sense.WiFiFrameQuery.SortKey = {
   VENDOR: 3,
   FRAME: 4,
   RSSI: 5,
-  SSdeviceNumber: 6
+  SSID: 6
 };
 
 /**
@@ -1072,7 +1072,7 @@ proto.sense.APQuery.prototype.toObject = function(opt_includeInstance) {
 proto.sense.APQuery.toObject = function(includeInstance, msg) {
   var f, obj = {
     item: (f = msg.getItem()) && proto.sense.ItemQuery.toObject(includeInstance, f),
-    ssdeviceNumber: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    ssid: jspb.Message.getFieldWithDefault(msg, 2, ""),
     sortkey: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
@@ -1182,7 +1182,7 @@ proto.sense.APQuery.serializeBinaryToWriter = function(message, writer) {
  */
 proto.sense.APQuery.SortKey = {
   DEFAULT: 0,
-  SSdeviceNumber: 1,
+  SSID: 1,
   TIME: 2
 };
 

@@ -160,7 +160,7 @@ export class DataQueryService {
         time : dateDetection,
         vendor: vendor,
         rssi: rssi,
-        ssdeviceNumber: ssid
+        ssid: ssid
       }
       allMac.push(macDet);
 
@@ -171,7 +171,7 @@ export class DataQueryService {
         var result = [];
        allMac.forEach(function (a) {
         if (!this[a.mac]) {
-            this[a.mac] = { mac: a.mac, rssi: a.rssi, vendor: a.vendor, ssdeviceNumber: a.ssid, time: [] };
+            this[a.mac] = { mac: a.mac, rssi: a.rssi, vendor: a.vendor, ssid: a.ssid, time: [] };
             result.push(this[a.mac]);
         }
         this[a.mac].time.push(a.time);
@@ -208,7 +208,7 @@ export class DataQueryService {
         time : dateDetection,
         vendor: vendor,
         rssi: rssi,
-        ssdeviceNumber: ssid
+        ssid: ssid
       }
       allMac.push(macDet);
 
@@ -219,7 +219,7 @@ export class DataQueryService {
         var result = [];
        allMac.forEach(function (a) {
         if (!this[a.ssid]) {
-            this[a.ssid] = { ssdeviceNumber: a.ssid, mac: [], vendor: a.vendor, rssi: a.rssi, time: [] };
+            this[a.ssid] = { ssid: a.ssid, mac: [], vendor: a.vendor, rssi: a.rssi, time: [] };
             result.push(this[a.ssid]);
         }
         this[a.ssid].time.push(a.time);

@@ -51,7 +51,7 @@ export class LiveUpdateChartComponent implements AfterViewInit, OnDestroy, OnCha
 
   setChartOption(earningLineTheme) {
     this.option = {
-      grdeviceNumber: {
+      grid: {
         left: 0,
         top: 0,
         right: 0,
