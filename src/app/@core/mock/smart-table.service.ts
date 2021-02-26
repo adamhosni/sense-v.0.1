@@ -10,22 +10,37 @@ export class SmartTableService extends SmartTableData {
     deviceIp: '84.209.75.2',
     deviceLat: '59.847261',
     deviceLng: '10.790308',
-    devicePswd: 'xyxyxyxyxy',
+    devicePswd: '********',
   }, {
     deviceNumber: 2,
     deviceId: 'K10203040506070809',
     deviceIp: '84.209.75.5',
     deviceLat: '21.52013',
     deviceLng: '39.826688',
-    devicePswd: 'cjcjcjcjcjc',
+    devicePswd: '********',
   }, {
     deviceNumber: 3,
     deviceId: 'M10203040506070809',
     deviceIp: '84.209.75.16',
+    deviceLat: '37.765332',
+    deviceLng: '32.723443',
+    devicePswd: '********',
+  },{
+    deviceNumber: 4,
+    deviceId: 'B6H713040C28A3080D',
+    deviceIp: '84.209.75.62',
     deviceLat: '39.826691',
     deviceLng: '32.5671391',
-    devicePswd: 'psosososo',
-  },
+    devicePswd: '********',
+  },{
+    deviceNumber: 5,
+    deviceId: 'H7320J70S40607D5B69',
+    deviceIp: '84.209.75.128',
+    deviceLat: '39.2052092',
+    deviceLng: '31.8171629',
+    devicePswd: '********',
+  }
+
   // {
   //   deviceNumber: 4,
   //   deviceId: 'Jacob',

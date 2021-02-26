@@ -12,6 +12,7 @@ import {
   NbSearchModule,
   NbInputModule,
   NbFormFieldModule,
+  NbDatepickerModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -28,6 +29,7 @@ import { TrafficChartComponent } from './traffic/traffic-chart.component';
 import { FormsModule } from '@angular/forms';
 import { DetectionComponent } from './detection/detection.component';
 import { DetectionLookUpComponent } from './detection/detection-look-up/detection-look-up.component';
+import { AdvancedComponent } from './advanced/advanced.component';
 // import { FilterPipe } from 'app/@theme/pipes';
 
 @NgModule({
@@ -48,6 +50,7 @@ import { DetectionLookUpComponent } from './detection/detection-look-up/detectio
     NbSearchModule,
     NbInputModule,
     NbFormFieldModule,
+    NbDatepickerModule,
   ],
   declarations: [
     DashboardComponent,
@@ -61,6 +64,7 @@ import { DetectionLookUpComponent } from './detection/detection-look-up/detectio
     TrafficComponent,
     TrafficChartComponent,
     DetectionLookUpComponent,
+    AdvancedComponent
   ],
 })
 export class DashboardModule { }
