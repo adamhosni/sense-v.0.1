@@ -46,10 +46,6 @@ export class TargetListService {
 
         resolve(response.toObject());
         // console.log(response.toObject());
-        // She mentioned that her heart got broken the night of habibi when I was down! Why did she mention it?
-        // It is never clear the picture with her! Maybe I am just not so important for her. Just a friend that looks after her.
-
-        //
     });
    });
    }

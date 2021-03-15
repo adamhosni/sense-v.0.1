@@ -209,7 +209,7 @@ L.geoJSON(point, {
             max: 1.1,
 
             gradient: {
-                0.0: 'blue',
+                0.0: 'green',
                 // 0.3: 'green',
                 0.5: 'yellow',
                 1.0: 'red'

@@ -18,6 +18,8 @@ export class DataQueryService {
   requestMsgBTF : BTFrameQuery;
   requestMsgWiFi : WiFiFrameQuery;
 
+  item: ItemQuery;
+
 
 
   constructor() {
@@ -27,6 +29,14 @@ export class DataQueryService {
     this.requestMsgAP.setSortkey(1);
     this.requestMsgBTF = new BTFrameQuery ();
     this.requestMsgWiFi = new WiFiFrameQuery ();
+
+    this.item = new ItemQuery();
+    this.item.setExcludenodetection(false);
+    this.requestMsgAP.setItem(this.item);
+    // console.log(this.item);
+
+    // console.log(this.requestMsgAP);
+
 
     // this.requestMsgAP = new APQuery().setSortkey(aa);
    }
@@ -41,7 +51,7 @@ export class DataQueryService {
 
     //  let timeRange = new TimeRange();
     //  timeRange.setFromepochms(today.setDate(today.getDate() - 1));
-    //  console.log(timeRange.toObject());
+     console.log(this.requestMsgAP.toObject());
 
     //  timeRange.setToepochms(today.getTime());
     //  console.log(timeRange.toObject());
@@ -57,6 +67,7 @@ export class DataQueryService {
     //  this.requestMsgAP.setSortkey(2);
     //  this.requestMsgAP.set
     //  console.log(item.toObject());
+
 
 
      return new Promise(async (resolve, reject) =>{
