@@ -38,28 +38,28 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
 
   solarValue: number;
   cpuTempCard: CardSettings = {
-    title: 'CPU temperature',
+    title: 'CPU Temperature',
     iconClass: 'nb-sunny-circled',
     type: 'primary',
     value: '-- °C',
   };
   cpuPerfCard: CardSettings = {
-    title: 'CPU performance',
+    title: 'CPU Performance',
     iconClass: 'nb-bar-chart',
     type: 'success',
     value: '-- %',
   };
   memUsaCard: CardSettings = {
-    title: 'Memory usage',
+    title: 'Memory Usage',
     iconClass: 'nb-roller-shades',
     type: 'info',
     value: '-- %',
   };
-  harDisCard: CardSettings = {
-    title: 'Hard disk',
+  intTempCard: CardSettings = {
+    title: 'Internal Temp',
     iconClass: 'nb-grid-a',
     type: 'warning',
-    value: '-- %',
+    value: '-- °C',
   };
 
   statusCards: string;
@@ -68,7 +68,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
     this.cpuTempCard,
     this.cpuPerfCard,
     this.memUsaCard,
-    this.harDisCard,
+    this.intTempCard,
   ];
 
   statusCardsByThemes: {
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         type: 'danger',
       },
       {
-        ...this.harDisCard,
+        ...this.intTempCard,
         type: 'info',
       },
     ],
@@ -173,7 +173,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         this.cpuTempCard.value = this.cputemp+' °C' ;
         this.cpuPerfCard.value = this.cpuperf.toFixed(2) +' %';
         this.memUsaCard.value = this.ramusage.toFixed(2) +' %';
-        this.harDisCard.value = this.hddusage +' %';
+        this.intTempCard.value = this.internaltemp +' °C';
       });
 
   }

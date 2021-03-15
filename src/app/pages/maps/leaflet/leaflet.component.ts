@@ -1,18 +1,35 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import * as L from 'leaflet';
 import 'style-loader!leaflet/dist/leaflet.css';
 import 'leaflet.markercluster';
+import { Feature, LineString, Point } from 'geojson';
 
 import { NbDialogService } from '@nebular/theme';
 import { GmapsComponent } from '../map-dialogue/gmaps.component';
 
+import 'leaflet.heat/dist/leaflet-heat.js'
+import * as h337 from 'heatmap.js';
+
 interface Sensor {
-  lat: number;
-  lng: number;
-  desc: string;
-  id: string;
+  id: string,
+  lat: number,
+  lng: number,
+  desc: string,
+}
+
+interface SensorNorway {
+  id: string,
+  lat: number,
+  lng: number,
+  desc: string,
+  location: string,
+  extemp: number,
+  intemp: number,
+  humidity: number,
+  wfdd: number,
+  btdd: number,
 }
 
 @Component({
@@ -22,6 +39,7 @@ interface Sensor {
   <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
 <script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+<script src="https://raw.githubusercontent.com/Harvinator/Leaflet.heat/dcf67f1aef555e0c214c2b6f904cf09a28d1c012/src/HeatLayer.js"></script>
     <nb-card >
       <nb-card-header>Sense Map</nb-card-header>
       <nb-card-body >
@@ -31,30 +49,26 @@ interface Sensor {
   `,
 })
 export class LeafletComponent implements AfterViewInit{
+  // @ViewChild('map') map: ElementRef;
 
   map;
-  saudiCoor = {
-    lat: 23.2500874,
-    lng: 42.1680221,
-  };
-  zoomLevel = 6;
 
-  darkLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    darkLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
       minZoom: 1,
       maxZoom: 17,
-      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-  });
-  // streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-  //   	maxZoom: 19,
-  //   	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-  // });
-  baseMaps = {
-    // "Streets": this.streetLayer,
-    "<span style='color: gray'>Smooth Dark</span>": this.darkLayer
-  };
+      // attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    });
+    streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    	maxZoom: 19,
+    	// attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+    });
+
+  wifiRange;
+  bthRange : L.Circle;
 
   wRangeExist : boolean = false;
   bRangeExist : boolean = false;
+  pointsLayer;
 
   smallIcon = new L.Icon({
     iconUrl: 'marker-icon.png',
@@ -74,15 +88,60 @@ ngAfterViewInit(): void{
 
   this.createMap();
   this.initSensors();
+  // let newAddressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
+    // const heat2 = L.heatLayer(newAddressPoints).addTo(this.map);
+
+        // heat.setOptions({max:.0001});
+
+
+
+
 }
   createMap(){
 
+    const zoomLevel = 6;
+    const saudiCoor = {
+      lat: 23.2500874,
+      lng: 42.1680221,
+    };
+
     this.map = L.map('map',{
       layers: [this.darkLayer],//, this.streetLayer
-      zoom: this.zoomLevel,
-      center: [this.saudiCoor.lat, this.saudiCoor.lng],
+      zoom: zoomLevel,
+      center: [saudiCoor.lat, saudiCoor.lng],
     });
-   // L.control.layers(this.baseMaps).addTo(this.map);
+
+
+   var myLines: LineString = {
+    "type": "LineString",
+    "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
+  };
+L.geoJSON(myLines).addTo(this.map);
+
+
+
+var point: Point = {
+  "type": "Point",
+  "coordinates": [-100, 40]
+};
+L.geoJSON(point, {
+  pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, {
+          // Stroke properties
+          color: '#5EA4D4',
+          opacity: 0.75,
+          weight: 2,
+
+          // Fill properties
+          fillColor: '#5EA4D4',
+          fillOpacity: 0.25,
+
+          radius: 2
+      });
+  }
+}).addTo(this.map);
+
+
 
   }
 
@@ -90,6 +149,20 @@ ngAfterViewInit(): void{
     let sensors: Sensor[] = [];
     sensors = this.getAllSensors();
    // sensors.push(sensor);
+
+   var ligna = [];
+   var i =0;
+  //  var heatLayer : L.LayerGroup;
+   var heatLayer = new L.LayerGroup();
+
+
+
+   const baseMaps = {
+    "Streets": this.streetLayer,
+    "<span style='color: gray'>Smooth Dark</span>": this.darkLayer};
+    var overlayMaps = {
+    "Heat": heatLayer
+    };
 
       sensors.forEach(sensor => {
         var latLng = [sensor.lat,sensor.lng];
@@ -120,35 +193,52 @@ ngAfterViewInit(): void{
         <button id="button-bth" class="button-range" type="button">Bluetooth Range</button></div>\
         <p><button id="button-details" class="button-details" type="button">Device Dashboard</button>\
       </form>';
-        this.addMarker(latLng, template, true);
+        this.addMarker(latLng, template);
 
+        var intensity = Math.random();
+        latLng.push(intensity)
+        ligna.push(latLng);
+
+
+        L.heatLayer([
+          ligna[i]
+        ]
+          , {radius: 100,
+            blur: 30,
+            maxZoom: 10,
+            max: 1.1,
+
+            gradient: {
+                0.0: 'blue',
+                // 0.3: 'green',
+                0.5: 'yellow',
+                1.0: 'red'
+            }}).addTo(heatLayer);
+            i++;
       });
+      // heatLayer.addTo(this.map);
+
+      L.control.layers(baseMaps, overlayMaps).addTo(this.map);
   }
 
-  addMarker(latLng, text, open) {
+  addMarker(latLng, text) {
 
     const marker = L.marker(latLng, { icon: this.smallIcon });
-
-    if (open) {
-     // marker.addTo(this.map).bindPopup(text);//.openPopup()
-      this.markers.addLayer(marker.bindPopup(text));
-    } else {
-      marker.addTo(this.map).bindPopup(text);
-    }
+    this.markers.addLayer(marker.bindPopup(text));//.openPopup()
     this.map.addLayer(this.markers);
 
-  marker.on('click', (clickEvent) => {
+    marker.on('click', (clickEvent) => {
     this.centerLeafletMapOnMarker (this.map, marker);
-
   });
+
 }
 
-centerLeafletMapOnMarker(map, marker) {
+centerLeafletMapOnMarker(map:L.Map, marker:L.Marker) {
 
   var latLng = [ marker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLng);
 
-  var wifiRange = L.circle(marker.getLatLng(), {
+  this.wifiRange = L.circle(marker.getLatLng(), {
     color: 'red',
     fillColor: '#f02',
     fillOpacity: 0.3,
@@ -157,7 +247,7 @@ centerLeafletMapOnMarker(map, marker) {
     opacity: 0.6,
   });
 
-  var bthRange = L.circle(marker.getLatLng(), {
+  this.bthRange = L.circle(marker.getLatLng(), {
     color: 'blue',
     fillColor: 'blue',
     fillOpacity: 0.3,
@@ -167,16 +257,15 @@ centerLeafletMapOnMarker(map, marker) {
   })
 
   if (!map.getBounds().equals(markerBounds)){
-    map.flyToBounds(markerBounds, {'duration':1, 'animate':true, 'maxZoom':16} );
-    console.log(map.getBounds().equals(markerBounds));
+    map.flyToBounds(markerBounds, {'duration':1.5 , 'animate':true, 'maxZoom':16} );
   }
 
   document.getElementById("button-wifi").addEventListener("click", Event => {
-    this.showWifiRange(map, this.wRangeExist, marker, wifiRange);
+    this.showWifiRange(map, marker);
   });
 
   document.getElementById("button-bth").addEventListener("click", Event => {
-    this.showBluetoothRange(map, this.bRangeExist, bthRange);
+    this.showBluetoothRange(map, this.bthRange);
   });
 
   document.getElementById("button-details").addEventListener("click", Event => {
@@ -202,20 +291,21 @@ getSensorByLatLng(latLng){
   let sensors: Sensor[] = [];
     sensors = this.getAllSensors();
    // sensors.push(sensor);
-  var chosenSensor;
+  var chosenSensor: Sensor;
 
       sensors.forEach(sensor => {
         let sensorLatLng = [sensor.lat, sensor.lng] ;
-        console.log(latLng[0].lat);
-        console.log(sensorLatLng[0]);
+        // console.log(latLng[0].lat);
+        // console.log(sensorLatLng[0]);
         if (latLng[0].lat === sensorLatLng[0]) chosenSensor = sensor;
       });
       return chosenSensor;
 }
 
-deleteWifiRange(map, rangeExist, range){
-  if (rangeExist)map.removeLayer(range);
-  this.wRangeExist = false;
+deleteWifiRange(map){
+  map.removeLayer(this.wifiRange);
+  map.removeLayer(this.pointsLayer);
+  this.wRangeExist = !this.wRangeExist;
 }
 deleteBluetoothRange(map, rangeExist, range){
   if (rangeExist)map.removeLayer(range);
@@ -223,7 +313,8 @@ deleteBluetoothRange(map, rangeExist, range){
 }
 
 
-showWifiRange (map, rangeExist, marker, wifiRange){
+
+showWifiRange (map, marker){
 
   var customPopup = '<b>WiFi Sensor Detection:\
   <p> Number of devices detected: 24 \
@@ -231,23 +322,111 @@ showWifiRange (map, rangeExist, marker, wifiRange){
   ';
   var customOptions = {'maxWidth': 500,'className': 'wifiCustom'};
 
-  if (rangeExist) {
-    this.deleteWifiRange(map, rangeExist, wifiRange);
-    console.log(rangeExist);
+  if (this.wRangeExist) {
+    this.deleteWifiRange(map);
+    console.log(this.wRangeExist);
   }
   else {
-    wifiRange.addTo(map).bindPopup(customPopup, customOptions)
+    this.wifiRange.addTo(map).bindPopup(customPopup, customOptions)
     .on("popupopen", (a) => {
       var popUp = a.target.getPopup();
       popUp.getElement()
      .querySelector(".wifiDetails")
      .addEventListener("click", e => {
-       this.showMoreWifi(map, marker, wifiRange);
-
-
+       this.showMoreWifi(map, marker, this.wifiRange);
      });
   });
-    this.wRangeExist = true;
+    this.wRangeExist = !this.wRangeExist;
+    console.log(this.wRangeExist);
+
+
+    var points = [];
+    var i =0;
+    var neg = -1;
+    var pos = -1;
+    // for (var i = 0 ; i++ ; i<10){
+      while (i<10){
+
+      var random1 = (Math.random() * 0.001);
+      var random2 = (Math.random() * 0.001);
+      // var random = (Math.random() - 0.5) * 5 * 0.001 ;
+      // console.log(random);
+      // console.log();
+
+
+      var latLng = marker.getLatLng();
+
+      var lat = latLng.lat + (random1 * neg);
+      var lng = latLng.lng + (random2 * -neg);
+
+      neg = -neg;
+
+      // if (i % 2 == 0) {
+      //   Math.abs(lat);
+      //   Math.abs(lng);
+      //   console.log(lat+'|'+lng);
+
+      // }
+
+      var point : Point = {
+        "type": "Point",
+        "coordinates": [lng, lat]
+      };
+      // console.log(point);
+
+      points.push(point);
+      i++;
+    }
+    // var point1  : Point = {
+    //   "type": "Point",
+    //   "coordinates": [10.790009, 59.846729]
+    // };
+    // var point2  : Point = {
+    //   "type": "Point",
+    //   "coordinates": [10.790309, 59.847060]
+    // };
+    // var point3  : Point = {
+    //   "type": "Point",
+    //   "coordinates": [10.790609, 59.847960]
+    // };
+    // var point4  : Point = {
+    //   "type": "Point",
+    //   "coordinates": [10.790449, 59.848111]
+    // };
+    // var point5  : Point = {
+    //   "type": "Point",
+    //   "coordinates": [10.791449, 59.848133]
+    // };
+
+
+    // points.push(point1);
+    // points.push(point2);
+    // points.push(point3);
+    // points.push(point4);
+    // points.push(point5);
+
+    this.pointsLayer =L.geoJSON();
+
+    for (let point of points) {
+      L.geoJSON(point, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                // Stroke properties
+                color: 'black',
+                opacity: 0.75,
+                weight: 10,
+
+                // Fill properties
+                fillColor: 'black',
+                fillOpacity: 0.25,
+                radius: 1
+            });
+        }
+      }).addTo(this.pointsLayer);
+
+    }
+    this.pointsLayer.addTo(map);
+
   }
 
 
@@ -270,52 +449,54 @@ showWifiRange (map, rangeExist, marker, wifiRange){
 
 
 showMoreWifi(map, marker, wifiRange){
-  console.log("BTN Works");
-  this.deleteWifiRange(map, 1, wifiRange);
+  this.deleteWifiRange(map);
 
   var wifi500 = L.circle(marker.getLatLng(), {
     color: 'yellow',
     fillColor: 'yellow',
-    fillOpacity: 0.3,
+    fillOpacity: 0.2,
     radius: 500,
     weight: 2,
-    opacity: 0.6,
+    opacity: 0.4,
   });
   wifi500.addTo(map);
 
   var wifi300 = L.circle(marker.getLatLng(), {
     color: 'green',
     fillColor: 'green',
-    fillOpacity: 0.4,
+    fillOpacity: 0.2,
     radius: 300,
     weight: 2,
-    opacity: 0.8,
+    opacity: 0.4,
   });
   wifi300.addTo(map);
 
   var wifi100 = L.circle(marker.getLatLng(), {
     color: 'red',
     fillColor: 'red',
-    fillOpacity: 0.5,
+    fillOpacity: 0.25,
     radius: 100,
     weight: 2,
-    opacity: 0.6,
+    opacity: 0.3,
   });
   wifi100.addTo(map);
+
+  var pl = this.pointsLayer.addTo(map);
+
   //______________________
 var deviceId = this.getSensorByLatLng([marker.getLatLng()]).id;
-let listWifis = {wifi100, wifi300, wifi500}
+let listWifis = {wifi100, wifi300, wifi500, pl}
   this.open(false, deviceId, listWifis);
 
 
 }
-showBluetoothRange (map, rangeExist, bthRange){
+showBluetoothRange (map, bthRange){
   var customPopup = "Information about bt sensor range<br/> Number of devices detected: 15";
   var customOptions = {'maxWidth': 500,'className': 'bluetoothCustom'};
 
-  if (rangeExist) {
-    this.deleteBluetoothRange(map, rangeExist, bthRange);
-    console.log(rangeExist);
+  if (this.bRangeExist) {
+    this.deleteBluetoothRange(map, this.bRangeExist, bthRange);
+    console.log(this.bRangeExist);
   }
   else {
     bthRange.addTo(map).bindPopup(customPopup, customOptions);
@@ -328,6 +509,19 @@ showBluetoothRange (map, rangeExist, bthRange){
 
 
   getAllSensors(){
+
+    let sensor0: SensorNorway = {
+      id: "P0",
+      lng: 10.790308,
+      lat: 59.847261,
+      desc: "Information about sensor 0",
+      location: 'string',
+      extemp: 10,
+      intemp: 10,
+      humidity: 10,
+      wfdd: 25,
+      btdd: 9
+    }
 
     let sensor1: Sensor = {
       lng: 39.8837078586038,
@@ -617,7 +811,7 @@ showBluetoothRange (map, rangeExist, bthRange){
     return [sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sensor7, sensor8, sensor9, sensor10, sensor11, sensor12, sensor13, sensor14, sensor15
       , sensor16, sensor17, sensor18, sensor19, sensor20, sensor21, sensor22, sensor23, sensor24, sensor25, sensor26, sensor27, sensor28, sensor29
       , sensor30, sensor31, sensor32, sensor33, sensor34, sensor38, sensor39, sensor40, sensor41, sensor42, sensor43, sensor44, sensor45, sensor46
-      , sensor47, sensor48, sensor49, sensor50]
+      , sensor47, sensor48, sensor49, sensor50, sensor0]
 
   }
 

@@ -7,9 +7,9 @@
 
   <span *ngIf = "isAccessPoint">SSID: {{rssi}} Detected <b class="keywords">{{timeTab.length}}  times&nbsp;&nbsp;&nbsp;</b> </span>
 <!-- rssi above means  ssid-->
-  <!-- &nbsp;&nbsp;&nbsp;<nb-select size="tiny" [(selected)]="type" (selectedChange)="changeTimeline($event)">
+  &nbsp;&nbsp;&nbsp;<nb-select size="tiny" [(selected)]="type" (selectedChange)="changeTimeline($event)">
     <nb-option *ngFor="let t of types" [value]="t">{{ t }}</nb-option>
-  </nb-select> -->
+  </nb-select>
 
   &nbsp;&nbsp;&nbsp;<input nbInput placeholder="Pick Date Range" [nbDatepicker]="formpicker">
   <nb-rangepicker #formpicker></nb-rangepicker>

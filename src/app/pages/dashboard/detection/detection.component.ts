@@ -10,6 +10,8 @@ import { DetectionLookUpComponent } from './detection-look-up/detection-look-up.
 import { TargetListService } from 'app/@core/mock/grpc/target-list.service';
 import { TargetListQService } from 'app/@core/mock/grpc/target-list-q.service';
 
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'ngx-detection',
   styleUrls: ['./detection.component.scss'],
@@ -20,6 +22,7 @@ export class DetectionComponent implements OnDestroy, AfterViewInit {
   private alive = true;
 
   searchText;
+  loading = true;
 
   authjwt:any;
 
@@ -37,6 +40,7 @@ export class DetectionComponent implements OnDestroy, AfterViewInit {
     private targetListService: TargetListService, private targetListQueryService: TargetListQService) {
 
       this.logIn();
+      // this.loading = true;
 
     // forkJoin([character, characterHomeworld]).subscribe(results => {
     //   // results[0] is our character
@@ -79,7 +83,32 @@ ngAfterViewInit(){
   // let loader = this.renderer.selectRootElement('#loader');
   //   this.renderer.setStyle(loader, 'display', 'none');
 
+  // this.loading = false;
 
+}
+
+downloadFile(data: any) {
+  console.log('downloadFile Works');
+
+  const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
+  const header = Object.keys(data[0]);
+  const csv = data.map((row) =>
+    header
+      .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+      .join(',')
+  );
+  csv.unshift(header.join(','));
+  const csvArray = csv.join('\r\n');
+
+  const a = document.createElement('a');
+  const blob = new Blob([csvArray], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+
+  a.href = url;
+  a.download = 'myFile.csv';
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
 }
 
   logIn(): void{
@@ -97,6 +126,8 @@ ngAfterViewInit(){
       this.fetchAP();
       //this.targetDeleteQuery();
       this.targetFullReadQuery()
+      setTimeout(() => this.loading = false, 8000);
+
 
 
 
@@ -124,7 +155,7 @@ ngAfterViewInit(){
         // console.log(resp);
         this.wfDevices = resp;
         // this.accessPoints = resp;
-        if (this.wfDevices[2] == 'null') this.wfDevices[2] = 'Unavailable Vendor';
+        if (this.wfDevices[2] == null) this.wfDevices[2] = 'Unavailable Vendor';// =='null'
         this.nWFdevices = this.wfDevices.length;
 
       });

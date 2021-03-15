@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MapsComponent } from './maps.component';
 import { GmapsComponent } from './map-dialogue/gmaps.component';
 import { LeafletComponent } from './leaflet/leaflet.component';
-import { BubbleMapComponent } from './bubble/bubble-map.component';
+// import { BubbleMapComponent } from './bubble/bubble-map.component';
 
 
 
@@ -17,10 +17,12 @@ const routes: Routes = [{
   }, {
     path: 'leaflet',
     component: LeafletComponent,
-  }, {
-    path: 'bubble',
-    component: BubbleMapComponent,
-  } ],
+  },
+  // {
+  //   path: 'bubble',
+  //   component: BubbleMapComponent,
+  // }
+],
 }];
 
 @NgModule({
@@ -33,6 +35,6 @@ export const routedComponents = [
   MapsComponent,
   GmapsComponent,
   LeafletComponent,
-  BubbleMapComponent,
+  // BubbleMapComponent,
 
 ];

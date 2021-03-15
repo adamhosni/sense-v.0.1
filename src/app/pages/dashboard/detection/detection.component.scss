@@ -37,6 +37,10 @@
     text-align: center;
   }
 
+  ::ng-deep .sizeSearchBar{
+    width: 95% !important;
+    grid-row: 1 / span 2;
+  }
 
   ::ng-deep .modal-full {
     // position: absolute !important;

@@ -1,4 +1,4 @@
-<nb-card size="giant">
+<nb-card size="giant" [nbSpinner]="loading" nbSpinnerStatus="danger" nbSpinnerSize="giant">
 
 
   <nb-tabset fullWidth>
@@ -8,14 +8,28 @@
     [badgeText]="nBTdevice"
     badgePosition="bottom right"
     badgeStatus="warning">
-    <nb-form-field>
-      <input type="text" placeholder="Search device by mac@ " status="basic" [(ngModel)]="searchText" fullWidth nbInput>
-      <button nbSuffix nbButton ghost >
-        <nb-icon icon="search-outline"
-                 pack="eva">
-        </nb-icon>
-      </button>
-    </nb-form-field>
+
+    <div class="row">
+      <div class="sizeSearchBar">
+        <nb-form-field>
+          <input type="text" placeholder="Search device by mac@ " status="basic" [(ngModel)]="searchText" fullWidth nbInput>
+          <button nbSuffix nbButton ghost >
+            <nb-icon icon="search-outline"
+                     pack="eva">
+            </nb-icon>
+          </button>
+        </nb-form-field>
+      </div>
+
+      <div class=".col-md-1">
+        <button nbSuffix nbButton ghost nbTooltip="Download CSV file" nbTooltipIcon="download-outline" nbTooltipStatus="danger" (click)="downloadFile(btDevices)">
+          <nb-icon icon="download-outline"
+                   pack="eva">
+          </nb-icon>
+        </button>
+      </div>
+    </div>
+
       <nb-list>
         <nb-list-item class="contact" *ngFor="let c of btDevices | appFilter: searchText : 'mac'">
           <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/bluetooth-outline.png"

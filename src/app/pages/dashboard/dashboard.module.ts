@@ -13,6 +13,8 @@ import {
   NbInputModule,
   NbFormFieldModule,
   NbDatepickerModule,
+  NbSpinnerModule,
+  NbTooltipModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -30,6 +32,17 @@ import { FormsModule } from '@angular/forms';
 import { DetectionComponent } from './detection/detection.component';
 import { DetectionLookUpComponent } from './detection/detection-look-up/detection-look-up.component';
 import { AdvancedComponent } from './advanced/advanced.component';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ChartModule } from 'angular2-chartjs';
+import { ECommerceChartsPanelComponent } from './charts-panel/charts-panel.component';
+import { ChartPanelSummaryComponent } from './charts-panel/chart-panel-summary/chart-panel-summary.component';
+import { ChartPanelHeaderComponent } from './charts-panel/chart-panel-header/chart-panel-header.component';
+
+import { OrdersChartComponent } from './charts-panel/charts/orders-chart.component';
+import { ProfitChartComponent } from './charts-panel/charts/profit-chart.component';
+
+import { LegendChartComponent } from './legend-chart/legend-chart.component';
 // import { FilterPipe } from 'app/@theme/pipes';
 
 @NgModule({
@@ -38,7 +51,6 @@ import { AdvancedComponent } from './advanced/advanced.component';
     ThemeModule,
     NbCardModule,
     NbUserModule,
-    NbButtonModule,
     NbTabsetModule,
     NbActionsModule,
     NbRadioModule,
@@ -51,6 +63,10 @@ import { AdvancedComponent } from './advanced/advanced.component';
     NbInputModule,
     NbFormFieldModule,
     NbDatepickerModule,
+    NgxChartsModule,
+    ChartModule,
+    NbSpinnerModule,
+    NbTooltipModule
   ],
   declarations: [
     DashboardComponent,
@@ -64,7 +80,13 @@ import { AdvancedComponent } from './advanced/advanced.component';
     TrafficComponent,
     TrafficChartComponent,
     DetectionLookUpComponent,
-    AdvancedComponent
+    AdvancedComponent,
+    ECommerceChartsPanelComponent,
+    ChartPanelSummaryComponent,
+    ChartPanelHeaderComponent,
+    OrdersChartComponent,
+    ProfitChartComponent,
+    LegendChartComponent,
   ],
 })
 export class DashboardModule { }

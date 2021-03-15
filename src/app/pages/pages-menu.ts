@@ -29,10 +29,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
         title: 'Leaflet Map',
         link: '/pages/maps/leaflet',
       },
-      {
-        title: 'Heat Map',
-        link: '/pages/maps/bubble',
-      },
+      // {
+      //   title: 'Heat Map',
+      //   link: '/pages/maps/bubble',
+      // },
       // {
       //   title: 'Search Maps',
       //   link: '/pages/maps/searchmap',
