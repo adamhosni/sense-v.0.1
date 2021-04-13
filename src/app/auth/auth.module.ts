@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { NgxAuthRoutingModule } from './auth-routing.module';
-import { NbAuthModule } from '@nebular/auth';
-import { 
+import { NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
+import {
   NbAlertModule,
   NbButtonModule,
   NbCheckboxModule,
@@ -25,7 +25,39 @@ import { NgxLoginComponent } from './login/login.component';
     NbCheckboxModule,
     NgxAuthRoutingModule,
 
-    NbAuthModule,
+    NbAuthModule.forRoot({
+      strategies: [
+        NbPasswordAuthStrategy.setup({
+          name: 'email',
+
+          baseEndpoint: 'http://localhost:3000/api',
+              login: {
+                // ...
+                endpoint: '/auth/login',
+                // method: 'post',
+              },
+              register: {
+                // ...
+                endpoint: '/auth/register',
+                // method: 'post',
+              },
+        }),
+      ],
+      forms: {
+        login: {
+          redirectDelay: 500,
+          showMessages: {
+            success: true,
+          },
+        },
+        register: {
+          redirectDelay: 0,
+          showMessages: {
+            success: true,
+          },
+        },
+      },
+    }),
   ],
   declarations: [
     // ... here goes our new components

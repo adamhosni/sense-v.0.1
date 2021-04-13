@@ -173,7 +173,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
         this.cpuTempCard.value = this.cputemp+' °C' ;
         this.cpuPerfCard.value = this.cpuperf.toFixed(2) +' %';
         this.memUsaCard.value = this.ramusage.toFixed(2) +' %';
-        this.intTempCard.value = this.internaltemp +' °C';
+        this.intTempCard.value = this.internaltemp.toFixed(2) +' °C';
       });
 
   }

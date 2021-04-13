@@ -13,7 +13,13 @@ const routes: Routes = [{
     {
       path: 'main-dashboard',
       component: MainComponent,
+
     },
+    // {
+    //   path: 'main-dashboard/:token',
+    //   component: MainComponent,
+
+    // },
     {
       path: 'sense-dashboard',
       component: DashboardComponent,
@@ -70,7 +76,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'sense-dashboard',
+      redirectTo: 'main-dashboard',
       pathMatch: 'full',
     },
     {

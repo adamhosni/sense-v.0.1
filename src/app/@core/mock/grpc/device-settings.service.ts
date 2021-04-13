@@ -19,7 +19,7 @@ export class DeviceSettingsService {
     this.client = new DeviceSettingsClient('http://84.209.75.2:8000');
     this.requestMessage = new DeviceInfoMessage();
     this.configReqMsg = new DeviceConfigMessage();
-    this.configReqMsg.setDeviceConfig(1)
+    this.configReqMsg.setDeviceConfig(3)
     // console.log(this.configReqMsg.toObject());
     // console.log(this.config.LOCATION);
 

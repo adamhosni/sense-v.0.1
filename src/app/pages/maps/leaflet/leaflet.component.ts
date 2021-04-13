@@ -10,7 +10,7 @@ import { NbDialogService } from '@nebular/theme';
 import { GmapsComponent } from '../map-dialogue/gmaps.component';
 
 import 'leaflet.heat/dist/leaflet-heat.js'
-import * as h337 from 'heatmap.js';
+// import * as h337 from 'heatmap.js';
 
 interface Sensor {
   id: string,
