@@ -7,6 +7,7 @@ import { IamService } from 'app/@core/mock/grpc/iam.service';
 import { takeWhile } from 'rxjs/operators' ;
 import { SolarData } from '../../@core/data/solar';
 
+
 interface CardSettings {
   title: string;
   iconClass: string;
@@ -27,14 +28,14 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   deviceInfo : any;
   ReqAgain : any ;
 
-  cputemp:any;
-  cpuperf : any;
-  internaltemp : any;
-  externaltemp : number;
-  humiditylvl : any;
-  exthumidity : any;
-  hddusage : any;
-  ramusage : any;
+  cputemp: number;
+  cpuperf: number;
+  internaltemp: number;
+  externaltemp: number;
+  humiditylvl: any;
+  exthumidity: any;
+  hddusage: any;
+  ramusage: number;
 
   solarValue: number;
   cpuTempCard: CardSettings = {
@@ -102,8 +103,7 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
 
   constructor(private themeService: NbThemeService,
               private solarService: SolarData,
-              private iamService: IamService, private deviceSettingsService : DeviceSettingsService,
-    private daraQueryService: DataQueryService) {
+              private iamService: IamService, private deviceSettingsService : DeviceSettingsService) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
@@ -120,11 +120,6 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(){
-
-
-
-    // this.logIn();
-    // console.log(this.authjwt);
 
 
   }
@@ -153,12 +148,11 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   }
 
   getDeviceDiagnostics(): any{
-    // console.log('ttt');
 
     const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
       this.deviceSettingsService.getDeviceDiagnostics(auth).then(response => {
-        // console.log(response);
+
         this.deviceInfo = response;
         this.cpuperf = this.deviceInfo.cpuperf;
         this.cputemp = this.deviceInfo.cputemp;

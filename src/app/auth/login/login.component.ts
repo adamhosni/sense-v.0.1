@@ -1,3 +1,4 @@
+import { HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbAuthService, NbLoginComponent } from '@nebular/auth';
@@ -28,7 +29,7 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
   // submitted: boolean = false;
   // rememberMe = false;
 
-  constructor( authServices: NbAuthService, router: Router, private authService: AuthService){//, private tokenStorage: TokenStorageService
+  constructor( authServices: NbAuthService, protected router: Router, private authService: AuthService){//, private tokenStorage: TokenStorageService
 
     super(authServices, {}, null, router);
 
@@ -78,14 +79,15 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
     // var token = jwToken;
     console.log(jwToken);
 
-    // window.location.reload();
-    this.router.navigate(['main-dashboard', jwToken]).then( (e) => {
-      if (e) {
-        console.log("Navigation Successful");
-      } else {
-        console.log("Navigation has failed!");
-      }
-    });//{ state: { example: this.jwToken } }
+    // const httpOptions = {
+    //   headers: new HttpHeaders({ Authorization: `Bearer ${jwToken}` })
+    // };
+
+    localStorage.setItem('access_token', jwToken);
+
+    this.router.navigate(['main-dashboard']);
+
+
   }
 
   ngOnInit(){

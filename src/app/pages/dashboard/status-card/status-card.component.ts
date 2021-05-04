@@ -28,7 +28,7 @@ export class StatusCardComponent implements AfterViewInit{
 
   ngAfterViewInit(){
 
-    // if (this.value == '-- °C'){
+    // if (this.value.includes('--')){
     //   this.on = false;
     // }
   }

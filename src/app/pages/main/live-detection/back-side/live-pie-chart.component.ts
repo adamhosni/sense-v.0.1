@@ -56,16 +56,16 @@ export class LivePieChartComponent implements AfterViewInit, OnDestroy {
         const variables = config.variables;
 
         this.options = this.getOptions(variables);
-        const defaultSelectedData =
-          this.options.series[0].data.find((item) => item.name === this.defaultSelectedCurrency);
-        const color = defaultSelectedData.itemStyle.normal.color.colorStops[0].color;
-        const pieData = {
-          value: defaultSelectedData.value,
-          name: defaultSelectedData.name,
-          color,
-        };
+        // const defaultSelectedData =
+        //   this.options.series[0].data.find((item) => item.name === this.defaultSelectedCurrency);
+        // const color = defaultSelectedData.itemStyle.normal.color.colorStops[0].color;
+        // const pieData = {
+        //   value: defaultSelectedData.value,
+        //   name: defaultSelectedData.name,
+        //   color,
+        // };
 
-        this.emitSelectPie(pieData);
+        // this.emitSelectPie(pieData);
       });
   }
 

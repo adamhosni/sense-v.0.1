@@ -7,19 +7,19 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pages.module')
       .then(m => m.PagesModule),
   },
-  {
-    path: 'auth',
-    loadChildren: 'app/auth/auth.module#NgxAuthModule',
-  },
-
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pages' },
-
   // {
   //   path: 'auth',
-  //   loadChildren: () => import('./auth/auth.module')
-  //     .then(g => g.NgxAuthModule),
+  //   loadChildren: 'app/auth/auth.module#NgxAuthModule',
   // },
+
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module')
+      .then(g => g.NgxAuthModule),
+  },
+
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'pages' },
 
 ];
 

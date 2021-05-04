@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NbAuthComponent } from '@nebular/auth';  // <---
+import { MainComponent } from 'app/pages/main/main.component';
 import { NgxLoginComponent } from './login/login.component';
 
 export const routes: Routes = [
@@ -15,6 +16,13 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // {
+  //   path: 'main-dashboard/:jwToken',
+  //   component: MainComponent,
+
+  // },
+
 ];
 
 @NgModule({

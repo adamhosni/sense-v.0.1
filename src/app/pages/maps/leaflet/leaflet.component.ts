@@ -56,11 +56,11 @@ export class LeafletComponent implements AfterViewInit{
     darkLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
       minZoom: 1,
       maxZoom: 17,
-      // attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     });
     streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
     	maxZoom: 19,
-    	// attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+    	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
     });
 
   wifiRange;
@@ -212,7 +212,7 @@ L.geoJSON(point, {
                 0.0: 'green',
                 // 0.3: 'green',
                 0.5: 'yellow',
-                1.0: 'red'
+                1.0: 'red' // >100
             }}).addTo(heatLayer);
             i++;
       });
@@ -224,7 +224,7 @@ L.geoJSON(point, {
   addMarker(latLng, text) {
 
     const marker = L.marker(latLng, { icon: this.smallIcon });
-    this.markers.addLayer(marker.bindPopup(text));//.openPopup()
+    this.markers.addLayer(marker.bindPopup(text));
     this.map.addLayer(this.markers);
 
     marker.on('click', (clickEvent) => {

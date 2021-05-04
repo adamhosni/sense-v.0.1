@@ -14,8 +14,6 @@ import {
 } from './utils';
 import { UserData } from './data/devices';
 import { ElectricityData } from './data/internal-temperature';
-import { SmartTableData } from './data/smart-table';
-// import { UserActivityData } from './data/user-activity';
 import { OrdersChartData } from './data/devices-chart';
 import { ProfitChartData } from './data/detection-chart';
 import { TrafficListData } from './data/traffic-list';
@@ -26,16 +24,8 @@ import { ProfitBarAnimationChartData } from './data/detection-bar-animation-char
 import { TemperatureHumidityData } from './data/temperature-humidity';
 import { SolarData } from './data/solar';
 import { TrafficChartData } from './data/traffic-chart';
-// import { StatsBarData } from './data/stats-bar';
-// import { CountryOrderData } from './data/country-order';
-// import { StatsProgressBarData } from './data/stats-progress-bar';
-// import { VisitorsAnalyticsData } from './data/visitors-analytics';
-// import { SecurityCamerasData } from './data/security-cameras';
-
 import { UserService } from './mock/detected-devices.service';
 import { ElectricityService } from './mock/internal-temperature.service';
-import { SmartTableService } from './mock/smart-table.service';
-// import { UserActivityService } from './mock/user-activity.service';
 import { OrdersChartService } from './mock/devices-chart.service';
 import { ProfitChartService } from './mock/detection-chart.service';
 import { TrafficListService } from './mock/traffic-list.service';
@@ -47,10 +37,7 @@ import { TemperatureHumidityService } from './mock/temperature-humidity.service'
 import { SolarService } from './mock/solar.service';
 import { TrafficChartService } from './mock/traffic-chart.service';
 import { StatsBarService } from './mock/stats-bar.service';
-// import { CountryOrderService } from './mock/country-order.service';
 import { StatsProgressBarService } from './mock/stats-progress-bar.service';
-// import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
-// import { SecurityCamerasService } from './mock/security-cameras.service';
 import { MockDataModule } from './mock/mock-data.module';
 import { StatsProgressBarData } from './data/stats-progress-bar';
 import { StatsBarData } from './data/stats-bar';
@@ -73,8 +60,6 @@ const DATA_SERVICES = [
   { provide: TrafficChartData, useClass: TrafficChartService },
   { provide: StatsBarData, useClass: StatsBarService },
   { provide: StatsProgressBarData, useClass: StatsProgressBarService },
-  { provide: SmartTableData, useClass: SmartTableService },
-
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {

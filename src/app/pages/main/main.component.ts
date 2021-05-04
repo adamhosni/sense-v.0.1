@@ -8,47 +8,60 @@ import { BackDevicesService } from 'app/@core/mock/grpc/back/back-devices.servic
   styleUrls: ['./main.component.scss'],
   templateUrl: './main.component.html',
 })
-export class MainComponent implements OnInit {
+export class MainComponent{
 
   sub;
-  // jwToken = '';d
-
-  constructor(private backDevService: BackDevicesService, private activatedroute : ActivatedRoute,
-    private router: Router){
+  jwToken = '';
 
 
-      // this.jwToken = this.router.getCurrentNavigation().extras.state.example;
-      // if (this.jwToken == undefined) this.jwToken = '';
+  constructor(private backDevService: BackDevicesService){
 
-    // console.log(this.activatedroute.snapshot.params.jwToken);
-
+    this.jwToken = localStorage.getItem('access_token');
   }
 
-  ngOnInit(){
+  // ngOnInit(){
 
-    let jwToken = this.activatedroute.snapshot.paramMap.get("token");
-    console.log(jwToken);
 
-    // this.getAllDevices(jwToken);
+    // console.log( this.jwToken );
 
-    // this.sub=this.activatedroute.paramMap.subscribe(params => {
-    //   console.log(params);
+    // this.getAllDevices(this.jwToken);
+    // this.addDevice(this.jwToken, this.ip, this.password);
 
-    //   // this.jwToken=params;
-    // });
+  // }
 
-    // console.log(this.jwToken);
-
-  }
   getAllDevices(bearer: String){
 
-    // const auth = new grpc.Metadata();
-      // auth.headersMap ["Authorization"] = ['Bearer '+''];
-      this.backDevService.getAllDevices(bearer);
+    this.sub = this.backDevService.getAllDevices(bearer).subscribe( data => {
+        for(let dev in data) {
+          let child = data[dev];
+          // console.log(child);
+        }
+    });
 
   }
 
+  addDevice(bearer: String, ip: String, password: String){
+
+
+    this.sub = this.backDevService.addDevice(bearer, {ip, password}).subscribe( data => {
+
+      if (data['success']) console.log(data['message']);
+
+      });
+
+  }
+
+  logout() {
+    localStorage.removeItem('access_token');
+  }
+
+  public get loggedIn(): boolean{
+    return localStorage.getItem('access_token') !==  null;
+  }
+
+
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    // this.sub.unsubscribe();
   }
 }

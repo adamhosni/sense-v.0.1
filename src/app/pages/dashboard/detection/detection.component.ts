@@ -42,27 +42,7 @@ export class DetectionComponent implements OnDestroy, AfterViewInit {
       this.logIn();
       // this.loading = true;
 
-    // forkJoin([character, characterHomeworld]).subscribe(results => {
-    //   // results[0] is our character
-    //   // results[1] is our character homeworld
-    //   results[0].homeworld = results[1];
-    //   this.loadedCharacter = results[0];
-    // });
-    this.allDevices.concat(this.wfDevices).concat(this.btDevices);
-
-    // forkJoin(
-    //   [this.userService.getContacts(),
-    //   this.userService.getRecentUsers()]
-    // )
-    //   .pipe(takeWhile(() => this.alive))
-    //   .subscribe(([contacts, recent]: [Contacts[], RecentUsers[]]) => {
-    //     // this.contacts = contacts;
-    //     // this.recent = recent;
-    //   });
-
-
   }
-  // getInputType(){}
 
   open(mac, time, rssi) {
     this.dialogService.open(DetectionLookUpComponent, {
@@ -124,14 +104,10 @@ downloadFile(data: any) {
       this.fetchWiFiItems();
       this.fetchAPItems();
       this.fetchAP();
+
       //this.targetDeleteQuery();
-      this.targetFullReadQuery()
+      // this.targetFullReadQuery()
       setTimeout(() => this.loading = false, 8000);
-
-
-
-
-
     });
   }
 

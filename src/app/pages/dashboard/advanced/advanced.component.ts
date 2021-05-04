@@ -50,6 +50,6 @@ export class AdvancedComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.themeSubscription.unsubscribe();
+    // this.themeSubscription.unsubscribe();
   }
 }

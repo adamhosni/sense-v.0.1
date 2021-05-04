@@ -16,7 +16,6 @@ import { SolarService } from './solar.service';
 import { TrafficChartService } from './traffic-chart.service';
 import { StatsBarService } from './stats-bar.service';
 import { StatsProgressBarService } from './stats-progress-bar.service';
-import { SmartTableService } from './smart-table.service';
 
 
 const SERVICES = [
@@ -35,7 +34,6 @@ const SERVICES = [
   TrafficChartService,
   StatsBarService,
   StatsProgressBarService,
-  SmartTableService,
 ];
 
 @NgModule({
