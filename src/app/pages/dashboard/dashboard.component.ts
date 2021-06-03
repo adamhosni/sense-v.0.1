@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, OnDestroy} from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { grpc } from '@improbable-eng/grpc-web';
 import { NbThemeService } from '@nebular/theme';
-import { DataQueryService } from 'app/@core/mock/grpc/data-query.service';
 import { DeviceSettingsService } from 'app/@core/mock/grpc/device-settings.service';
-import { IamService } from 'app/@core/mock/grpc/iam.service';
 import { takeWhile } from 'rxjs/operators' ;
 import { SolarData } from '../../@core/data/solar';
+import { DetectionComponent } from './detection/detection.component';
 
 
 interface CardSettings {
@@ -20,7 +20,9 @@ interface CardSettings {
   styleUrls: ['./dashboard.component.scss'],
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnDestroy, AfterViewInit {
+export class DashboardComponent implements OnDestroy, OnInit, AfterViewInit {
+
+  // @ViewChildren (DetectionComponent) detectionC;
 
   private alive = true;
 
@@ -28,16 +30,16 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
   deviceInfo : any;
   ReqAgain : any ;
 
+  deviceIp;
+
   cputemp: number;
   cpuperf: number;
   internaltemp: number;
   externaltemp: number;
-  humiditylvl: any;
-  exthumidity: any;
-  hddusage: any;
   ramusage: number;
 
   solarValue: number;
+
   cpuTempCard: CardSettings = {
     title: 'CPU Temperature',
     iconClass: 'nb-sunny-circled',
@@ -103,7 +105,9 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
 
   constructor(private themeService: NbThemeService,
               private solarService: SolarData,
-              private iamService: IamService, private deviceSettingsService : DeviceSettingsService) {
+              private deviceSettingsService : DeviceSettingsService,
+              private activatedRoute: ActivatedRoute) {
+
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
@@ -115,81 +119,47 @@ export class DashboardComponent implements OnDestroy, AfterViewInit {
       .subscribe((data) => {
         this.solarValue = data;
       });
-
-      this.logIn();
   }
 
+  ngOnInit(){
+
+    this.deviceIp = this.activatedRoute.snapshot.params.deviceIp;
+    let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
+      const auth = new grpc.Metadata();
+      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+      this.ReqAgain = setInterval(() => {
+        this.getDeviceDiagnostics(auth, this.deviceIp);
+        // console.log(this.detectionC.nBTdevice);
+
+        }, 10000);
+
+  }
   ngAfterViewInit(){
-
+    // let a = this.detectionC.last.nBTdevice
+    // console.log(a);
 
   }
-  ngOnDestroy() {
-    this.alive = false;
-    clearInterval(this.ReqAgain);
-  }
+  getDeviceDiagnostics( auth, ip: string ){
 
 
-  getDeviceInfo(){
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.deviceSettingsService.getDeviceInfo(auth).then(response => {
-        //console.log(response);
-       // this.deviceInfo = response;
-      });
-  }
-
-  deviceConfig(){
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.deviceSettingsService.deviceConfig(auth).then(response => {
-        console.log(response);
-       // this.deviceInfo = response;
-      });
-  }
-
-  getDeviceDiagnostics(): any{
-
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.deviceSettingsService.getDeviceDiagnostics(auth).then(response => {
+      this.deviceSettingsService.getDeviceDiagnostics(auth, ip).then(response => {
 
         this.deviceInfo = response;
         this.cpuperf = this.deviceInfo.cpuperf;
         this.cputemp = this.deviceInfo.cputemp;
-        this.internaltemp = this.deviceInfo.internaltemp;
-        this.externaltemp = this.deviceInfo.externaltemp;
-        this.exthumidity = this.deviceInfo.exthumidity;
-        this.hddusage = this.deviceInfo.hddusage;
-        this.humiditylvl = this.deviceInfo.humiditylvl;
         this.internaltemp = this.deviceInfo.internaltemp;
         this.ramusage = this.deviceInfo.ramusage;
 
         this.cpuTempCard.value = this.cputemp+' °C' ;
         this.cpuPerfCard.value = this.cpuperf.toFixed(2) +' %';
         this.memUsaCard.value = this.ramusage.toFixed(2) +' %';
-        this.intTempCard.value = this.internaltemp.toFixed(2) +' °C';
+        this.intTempCard.value = (this.internaltemp / 1000).toFixed(2) +' °C';
       });
 
   }
-
-
-
-
-    logIn(): any{
-
-      const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
-
-       this.iamService.authenticate(auth).then(response => {
-        this.authjwt = response;
-        this.deviceConfig();
-
-        this.getDeviceDiagnostics();
-        this.ReqAgain = setInterval(() => {this.getDeviceDiagnostics();
-          }, 8000);
-
-      });
-
-    }
+  ngOnDestroy() {
+    this.alive = false;
+    clearInterval(this.ReqAgain);
+  }
 
 }

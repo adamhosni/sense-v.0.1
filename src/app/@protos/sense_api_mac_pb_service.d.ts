@@ -3,6 +3,7 @@
 
 import * as sense_api_mac_pb from "./sense_api_mac_pb";
 import * as google_protobuf_empty_pb from "google-protobuf/google/protobuf/empty_pb";
+import * as sense_core_mac_data_pb from "./sense_core_mac_data_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 
 type TargetListUpdateServiceTargetCreateQuery = {
@@ -10,7 +11,7 @@ type TargetListUpdateServiceTargetCreateQuery = {
   readonly service: typeof TargetListUpdateService;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof sense_api_mac_pb.TargetUpdateRequest;
+  readonly requestType: typeof sense_core_mac_data_pb.TargetUpdateRequest;
   readonly responseType: typeof google_protobuf_empty_pb.Empty;
 };
 
@@ -19,14 +20,24 @@ type TargetListUpdateServiceTargetDeleteQuery = {
   readonly service: typeof TargetListUpdateService;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof sense_api_mac_pb.TargetUpdateRequest;
+  readonly requestType: typeof sense_core_mac_data_pb.TargetUpdateRequest;
   readonly responseType: typeof google_protobuf_empty_pb.Empty;
+};
+
+type TargetListUpdateServiceTargetReadQuery = {
+  readonly methodName: string;
+  readonly service: typeof TargetListUpdateService;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof sense_core_mac_data_pb.TargetListRequest;
+  readonly responseType: typeof sense_core_mac_data_pb.TargetListResponse;
 };
 
 export class TargetListUpdateService {
   static readonly serviceName: string;
   static readonly TargetCreateQuery: TargetListUpdateServiceTargetCreateQuery;
   static readonly TargetDeleteQuery: TargetListUpdateServiceTargetDeleteQuery;
+  static readonly TargetReadQuery: TargetListUpdateServiceTargetReadQuery;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
@@ -62,22 +73,31 @@ export class TargetListUpdateServiceClient {
 
   constructor(serviceHost: string, options?: grpc.RpcOptions);
   targetCreateQuery(
-    requestMessage: sense_api_mac_pb.TargetUpdateRequest,
+    requestMessage: sense_core_mac_data_pb.TargetUpdateRequest,
     metadata: grpc.Metadata,
     callback: (error: ServiceError|null, responseMessage: google_protobuf_empty_pb.Empty|null) => void
   ): UnaryResponse;
   targetCreateQuery(
-    requestMessage: sense_api_mac_pb.TargetUpdateRequest,
+    requestMessage: sense_core_mac_data_pb.TargetUpdateRequest,
     callback: (error: ServiceError|null, responseMessage: google_protobuf_empty_pb.Empty|null) => void
   ): UnaryResponse;
   targetDeleteQuery(
-    requestMessage: sense_api_mac_pb.TargetUpdateRequest,
+    requestMessage: sense_core_mac_data_pb.TargetUpdateRequest,
     metadata: grpc.Metadata,
     callback: (error: ServiceError|null, responseMessage: google_protobuf_empty_pb.Empty|null) => void
   ): UnaryResponse;
   targetDeleteQuery(
-    requestMessage: sense_api_mac_pb.TargetUpdateRequest,
+    requestMessage: sense_core_mac_data_pb.TargetUpdateRequest,
     callback: (error: ServiceError|null, responseMessage: google_protobuf_empty_pb.Empty|null) => void
+  ): UnaryResponse;
+  targetReadQuery(
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
+  ): UnaryResponse;
+  targetReadQuery(
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
   ): UnaryResponse;
 }
 

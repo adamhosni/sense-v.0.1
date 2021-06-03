@@ -1,28 +1,27 @@
-import { AfterViewInit, Component, Input, OnDestroy} from '@angular/core';
+import {  Component, OnDestroy, OnInit} from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
-import { Temperature, TemperatureHumidityData } from '../../../@core/data/temperature-humidity';
+import { Temperature } from '../../../@core/data/temperature-humidity';
 import { takeWhile } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import { grpc } from '@improbable-eng/grpc-web';
 import { DeviceSettingsService } from 'app/@core/mock/grpc/device-settings.service';
-import { IamService } from 'app/@core/mock/grpc/iam.service';
+import { ActivatedRoute } from '@angular/router';
+import { TemperatureHumidityService } from 'app/@core/mock/temperature-humidity.service';
 
 @Component({
   selector: 'ngx-temperature',
   styleUrls: ['./temperature.component.scss'],
   templateUrl: './temperature.component.html',
 })
-export class TemperatureComponent implements OnDestroy {
+export class TemperatureComponent implements OnDestroy, OnInit {
 
-  @Input() aa: number;
 
-  authjwt:any[] = [];
   deviceInfo : any;
 
-  internaltemp : any;
-  externaltemp : number = 10;
-  humiditylvl : any;
-  exthumidity : any;
+  internaltemp : number;
+  externaltemp : number;
+  humiditylvl : number;
+  exthumidity : number;
 
 
 
@@ -30,20 +29,22 @@ export class TemperatureComponent implements OnDestroy {
 
   temperatureData: Temperature;
   temperature: number;
-  temperatureOff = false;
-  //temperatureMode = 'cool';
+  temperatureOff = true;
+  temperatureMode = 'cool';
 
   humidityData: Temperature;
   humidity: number;
-  humidityOff = false;
+  humidityOff = true;
   humidityMode = 'heat';
 
   theme: any;
   themeSubscription: any;
 
+  deviceIp;
+
   constructor(private themeService: NbThemeService,
-              private temperatureHumidityService: TemperatureHumidityData,
-              private iamService: IamService, private deviceSettingsService : DeviceSettingsService) {
+              private activatedRoute: ActivatedRoute,
+              private temperatureHumidityService: TemperatureHumidityService, private deviceSettingsService : DeviceSettingsService) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(config => {
@@ -51,56 +52,42 @@ export class TemperatureComponent implements OnDestroy {
     });
 
     forkJoin(
-      this.temperatureHumidityService.getTemperatureData(),
-      this.temperatureHumidityService.getHumidityData(),
+      [this.temperatureHumidityService.getTemperatureData(),
+      this.temperatureHumidityService.getHumidityData(),]
     )
       .subscribe(([temperatureData, humidityData]: [Temperature, Temperature]) => {
         this.temperatureData = temperatureData;
-        // this.temperature = this.temperatureData.value;
-
         this.humidityData = humidityData;
-        this.humidity = this.humidityData.value;
-        // this.temperature = this.aa;
+
       });
-      
-      
-      this.logIn()
-      
+
+  }
+  ngOnInit(){
+
+    this.deviceIp = this.activatedRoute.snapshot.params.deviceIp;
+    let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
+      const auth = new grpc.Metadata();
+      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+
+      this.GetDeviceDiagnostics( auth, this.deviceIp );
+
   }
 
 
-  logIn(): any{
-  
-    const auth = new grpc.Metadata();
-    auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
+  GetDeviceDiagnostics( auth, ip: string ){
 
-     this.iamService.authenticate(auth).then(response => {
-      //console.log(response);
-      this.authjwt.push(response);
+      this.deviceSettingsService.getDeviceDiagnostics(auth, ip).then(response => {
 
-
-      this.GetDeviceDiagnostics();
-      // this.getAp();
-      
-      //return response;      
-    });
-  }
-  GetDeviceDiagnostics(){
-  
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.deviceSettingsService.getDeviceDiagnostics(auth).then(response => {
-        // console.log(response);
         this.deviceInfo = response;
         this.temperature = this.deviceInfo.externaltemp;
+        this.temperatureOff = false;
+
         this.humidity = this.deviceInfo.exthumidity;
+        this.humidityOff = false;
         this.humiditylvl = this.deviceInfo.humiditylvl;
-        this.internaltemp = this.deviceInfo.internaltemp;
-
-
 
       });
-  
+
   }
   ngOnDestroy() {
     this.alive = false;

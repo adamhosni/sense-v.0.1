@@ -38,8 +38,9 @@
   }
 
   ::ng-deep .sizeSearchBar{
-    width: 95% !important;
-    grid-row: 1 / span 2;
+    width: 70% !important;
+    margin-left: 3%;
+    // grid-row: 1 / span 2!important;
   }
 
   ::ng-deep .modal-full {

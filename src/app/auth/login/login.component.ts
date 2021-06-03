@@ -1,10 +1,7 @@
-import { HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbAuthService, NbLoginComponent } from '@nebular/auth';
-import { User } from 'app/@core/data/user';
 import { AuthService } from 'app/@core/mock/grpc/back/auth.service';
-// import { AuthService } from 'app/@core/mock/grpc/back/auth.service';
 
 @Component({
   selector: 'ngx-login',
@@ -15,19 +12,11 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
+  successMessage = '';
 
   jwToken = '';
   userId = '';
-
-  // redirectDelay: number = 0;
-  // showMessages: any = {};
-  // strategy: string = '';
-  // errors: string[] = [];
-  // messages: string[] = [];
-  // user: User = {email: '', password: ''};
-// user: any = {};
-  // submitted: boolean = false;
-  // rememberMe = false;
+  success : boolean;
 
   constructor( authServices: NbAuthService, protected router: Router, private authService: AuthService){//, private tokenStorage: TokenStorageService
 
@@ -44,31 +33,31 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 
   onSubmit(): void {
 
-    this.submitted = true;
-
     this.logina(this.user.email, this.user.password).subscribe(
       data => {
 
-        console.log(data);
+        this.success = true;
 
-        this.errorMessage = 'Authentication Successful';
+        this.successMessage = 'Authentication Successful';
+
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.jwToken = data.token;
         this.userId = data.userId;
 
-        this.reloadPage(this.jwToken );
+        this.reloadPage( this.jwToken );
 
       },
       err => {
 
+        this.success = false;
         this.errorMessage = err.error.error;
         this.isLoginFailed = true;
-        console.log(this.errorMessage);
 
       }
     );
+    this.submitted = true;
   }
 
   logina(email , pass): any{
@@ -76,12 +65,8 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
   }
 
   reloadPage(jwToken : any): void {
-    // var token = jwToken;
-    console.log(jwToken);
 
-    // const httpOptions = {
-    //   headers: new HttpHeaders({ Authorization: `Bearer ${jwToken}` })
-    // };
+    console.log(jwToken);
 
     localStorage.setItem('access_token', jwToken);
 
@@ -98,6 +83,7 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 
   onClose(){
     this.submitted = false;
+    this.errorMessage = '';
   }
 
 

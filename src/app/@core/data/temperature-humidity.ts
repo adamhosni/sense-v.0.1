@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 export interface Temperature {
-  value: number;
+  value: string;
   min: number;
   max: number;
 }

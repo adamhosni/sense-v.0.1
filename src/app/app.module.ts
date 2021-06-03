@@ -21,12 +21,12 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 // import { FilterPipe } from './@theme/pipes';
 
 
-const formSetting: any = {
-  redirectDelay: 0,
-  showMessages: {
-    success: true,
-  },
-};
+// const formSetting: any = {
+//   redirectDelay: 0,
+//   showMessages: {
+//     success: true,
+//   },
+// };
 
 
 @NgModule({
@@ -46,41 +46,7 @@ const formSetting: any = {
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
     NbEvaIconsModule,
-    // FilterPipe
-  //   NbAuthModule.forRoot({
-  //     strategies: [
-  //       NbPasswordAuthStrategy.setup({
-  //         name: 'email',
-  //         baseEndpoint: 'http://example.com/app-api/v1',
-  // login: {
-  //   endpoint: '/auth/sign-in',
-  // },
-  // register: {
-  //   endpoint: '/auth/sign-up',
-  // },
-  // logout: {
-  //   endpoint: '/auth/sign-out',
-  // },
-  // requestPass: {
-  //   endpoint: '/auth/request-pass',
-  // },
-  // resetPass: {
-  //   endpoint: '/auth/reset-pass',
-  // },
-  //       }),
-  //     ],
-  //     forms: {
-  //       login: formSetting,
-  //          register: formSetting,
-  //          requestPassword: formSetting,
-  //          resetPassword: formSetting,
-  //          logout: {
-  //            redirectDelay: 0,
-  //          },
-  //     },
-  //   }),
-
-  ],
+    ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

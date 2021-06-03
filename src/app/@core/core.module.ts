@@ -13,7 +13,6 @@ import {
   StateService,
 } from './utils';
 import { UserData } from './data/devices';
-import { ElectricityData } from './data/internal-temperature';
 import { OrdersChartData } from './data/devices-chart';
 import { ProfitChartData } from './data/detection-chart';
 import { TrafficListData } from './data/traffic-list';
@@ -25,7 +24,6 @@ import { TemperatureHumidityData } from './data/temperature-humidity';
 import { SolarData } from './data/solar';
 import { TrafficChartData } from './data/traffic-chart';
 import { UserService } from './mock/detected-devices.service';
-import { ElectricityService } from './mock/internal-temperature.service';
 import { OrdersChartService } from './mock/devices-chart.service';
 import { ProfitChartService } from './mock/detection-chart.service';
 import { TrafficListService } from './mock/traffic-list.service';
@@ -47,7 +45,6 @@ import { StatsBarData } from './data/stats-bar';
 
 const DATA_SERVICES = [
   { provide: UserData, useClass: UserService },
-  { provide: ElectricityData, useClass: ElectricityService },
   { provide: OrdersChartData, useClass: OrdersChartService },
   { provide: ProfitChartData, useClass: ProfitChartService },
   { provide: TrafficListData, useClass: TrafficListService },

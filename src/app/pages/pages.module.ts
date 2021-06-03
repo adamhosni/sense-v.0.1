@@ -7,7 +7,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { MainModule } from './main/main.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
-import { ToolTipRowComponent } from './main/tool-tip-row/tool-tip-row.component';
+// import { ToolTipRowComponent } from './main/tool-tip-row/tool-tip-row.component';
 
 @NgModule({
   imports: [

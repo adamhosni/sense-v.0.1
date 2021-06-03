@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { grpc } from '@improbable-eng/grpc-web';
-import { DataQueryClient, ResponseStream } from 'app/@protos/sense_api_dataquery_pb_service';
+import { DataQueryClient } from 'app/@protos/sense_api_dataquery_pb_service';
 import { AccessPointsReplyMsg, BasicMacMsg, BTFramePointMsg, WiFiFramePointMsg } from 'app/@protos/sense_core_datamodel_pb';
 import { APQuery, BTFrameQuery, ItemQuery, TimeRange, WiFiFrameQuery } from 'app/@protos/sense_core_datarequest_pb';
 
@@ -20,55 +20,46 @@ export class DataQueryService {
 
   item: ItemQuery;
 
+  i: ItemQuery;
+  t: TimeRange;
 
 
   constructor() {
-    this.client = new DataQueryClient('http://84.209.75.2:8000');
+
 
     this.requestMsgAP = new APQuery ();
     this.requestMsgAP.setSortkey(1);
+
+    var today = new Date();
+    var yesterday = today.setDate(today.getDate()-1);
+    var lastWeek = today.setDate(today.getDate()-7);
+    var lastMonth = today.setDate(today.getDate()-10);//Last 10 days
+    this.t = new TimeRange();
+    this.t.setFromepochms(lastMonth);
+
+
+
+    this.t.setToepochms(Date.now());
+    this.i = new ItemQuery();
+    this.i.setTimerange(this.t);
+    // this.i.setPagenum(1);
+    // this.i.setItemperpage(100000);
     this.requestMsgBTF = new BTFrameQuery ();
+    this.requestMsgBTF.setItem(this.i);
+
     this.requestMsgWiFi = new WiFiFrameQuery ();
 
     this.item = new ItemQuery();
     this.item.setExcludenodetection(false);
     this.requestMsgAP.setItem(this.item);
-    // console.log(this.item);
 
-    // console.log(this.requestMsgAP);
-
-
-    // this.requestMsgAP = new APQuery().setSortkey(aa);
    }
 
-   fetchAPItems(metadata: grpc.Metadata) : Promise <Array<any>>{
+   fetchAPItems(metadata: grpc.Metadata, ip: string) : Promise <Array<any>>{
      var allAP = []
      var today = new Date();
-    //  this.requestMsgAP.setSsid('Get-2G-F5DBBD');
-    // var item = new ItemQuery();
-    // item.setAscorder(false);
 
-
-    //  let timeRange = new TimeRange();
-    //  timeRange.setFromepochms(today.setDate(today.getDate() - 1));
      console.log(this.requestMsgAP.toObject());
-
-    //  timeRange.setToepochms(today.getTime());
-    //  console.log(timeRange.toObject());
-
-
-    //  let item = new ItemQuery();
-    //  item.setAscorder(false); // Ascendant order if true
-    //  item.setTimerange(timeRange); // Time Range for fetching AP
-    //  item.setInterface('wlan3') // Interface for connexion
-    //  item.setKey('b6:73:c7:41:58:c5'); // Key must be mac @
-
-    //  this.requestMsgAP.setItem(item);
-    //  this.requestMsgAP.setSortkey(2);
-    //  this.requestMsgAP.set
-    //  console.log(item.toObject());
-
-
 
      return new Promise(async (resolve, reject) =>{
       let a = [];
@@ -93,10 +84,9 @@ export class DataQueryService {
 
 
 
-   fetchBTItems(metadata: grpc.Metadata) : Promise <Array<any>>{
+   fetchBTItems(metadata: grpc.Metadata, ip: string) : Promise <Array<any>>{
+    this.client = new DataQueryClient('http://' + ip + ':8000');
     var allMac = [];
-
-
     return new Promise(async (resolve, reject) =>{
 
      const stream = this.client.fetchBTItems(this.requestMsgBTF, metadata);
@@ -147,9 +137,68 @@ export class DataQueryService {
 
   }
 
+  fetchBTItemsRange(metadata: grpc.Metadata, ip: string, timeRange: TimeRange) : Promise <Array<any>>{
+    this.client = new DataQueryClient('http://' + ip + ':8000');
+    var allMac = [];
+    let item = new ItemQuery();
+    item.setTimerange(timeRange);
+    let requestMsgBTF = new BTFrameQuery ();
+    requestMsgBTF.setItem(item);
+
+    return new Promise(async (resolve, reject) =>{
+
+     const stream = this.client.fetchBTItems(requestMsgBTF, metadata);
+     stream.on('data', (replyMessage : BTFramePointMsg) => {
+
+      var dateDetection = new Date(replyMessage.getTime());
+
+      var macMsg = new BasicMacMsg();
+      macMsg = replyMessage.getFrame().getInfo();
+      var mac = macMsg.getMac();
+
+      var nameMac = replyMessage.getFrame().getName();
+      var typeMac = replyMessage.getFrame().getType();
+      var vendorMac = replyMessage.getFrame().getInfo().getVendor();
+
+       var macDet = {
+         mac : mac.toUpperCase(),
+         time : dateDetection,
+         name: nameMac,
+         type: typeMac,
+         vendor: vendorMac
+       }
+      allMac.push(macDet);
+
+     });
 
 
-  fetchWiFiItems(metadata: grpc.Metadata) : Promise <Array<any>>{
+
+       stream.on('end',() => {
+
+       var result = [];
+       allMac.forEach(function (a) {
+        if (!this[a.mac]) {
+            this[a.mac] = { mac: a.mac, type: a.type, vendor: a.vendor, name: a.name, time: [] };
+            result.push(this[a.mac]);
+        }
+        this[a.mac].time.push(a.time);
+    }, Object.create(null));
+
+    console.log(result);
+    resolve(result);
+  });
+     stream.on('status',function(){
+      //  console.log(reject);
+     });
+    });
+
+
+  }
+
+
+
+  fetchWiFiItems(metadata: grpc.Metadata, ip: string) : Promise <Array<any>>{
+    this.client = new DataQueryClient('http://' + ip + ':8000');
     var allMac = [];
     return new Promise(async (resolve, reject) =>{
 
@@ -188,7 +237,7 @@ export class DataQueryService {
         this[a.mac].time.push(a.time);
     }, Object.create(null));
 
-    console.log(result);
+    // console.log(result);
     resolve(result);
 
      });
@@ -199,7 +248,8 @@ export class DataQueryService {
 
   }
 
-  fetchAP(metadata: grpc.Metadata) : Promise <Array<any>>{
+  fetchAP(metadata: grpc.Metadata, ip: string) : Promise <Array<any>>{
+    this.client = new DataQueryClient('http://' + ip + ':8000');
     var allMac = [];
     return new Promise(async (resolve, reject) =>{
 

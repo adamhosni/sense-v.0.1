@@ -23,8 +23,8 @@ import { DashboardComponent } from './dashboard.component';
 import { StatusCardComponent } from './status-card/status-card.component';
 import { TemperatureComponent } from './temperature/temperature.component';
 import { TemperatureDraggerComponent } from './temperature/temperature-dragger/temperature-dragger.component';
-import { InternalTemperatureComponent } from './intemperature/intemperature.component';
-import { ElectricityChartComponent } from './intemperature/electricity-chart/electricity-chart.component';
+// import { InternalTemperatureComponent } from './intemperature/intemperature.component';
+// import { ElectricityChartComponent } from './intemperature/electricity-chart/electricity-chart.component';
 import { SolarComponent } from './solar/solar.component';
 import { TrafficComponent } from './traffic/traffic.component';
 import { TrafficChartComponent } from './traffic/traffic-chart.component';
@@ -74,8 +74,8 @@ import { LegendChartComponent } from './legend-chart/legend-chart.component';
     TemperatureDraggerComponent,
     DetectionComponent,
     TemperatureComponent,
-    InternalTemperatureComponent,
-    ElectricityChartComponent,
+    // InternalTemperatureComponent,
+    // ElectricityChartComponent,
     SolarComponent,
     TrafficComponent,
     TrafficChartComponent,

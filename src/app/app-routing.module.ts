@@ -7,10 +7,6 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pages.module')
       .then(m => m.PagesModule),
   },
-  // {
-  //   path: 'auth',
-  //   loadChildren: 'app/auth/auth.module#NgxAuthModule',
-  // },
 
   {
     path: 'auth',

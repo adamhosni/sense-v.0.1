@@ -4,7 +4,7 @@
     <nb-tab tabTitle="Temperature">
 
       <div class="slider-container">
-        <ngx-temperature-dragger [(value)]="temperature" (power)="temperatureOff = !$event"
+        <ngx-temperature-dragger [(value)]="temperature"
                                  [min]="temperatureData.min" [max]="temperatureData.max" [disableArcColor]="theme.arcEmpty"
                                  [fillColors]="theme.arcFill" [thumbBg]="theme.thumbBg" [thumbBorderColor]="theme.thumbBorder">
 
@@ -19,20 +19,7 @@
         </ngx-temperature-dragger>
       </div>
 
-      <!-- <nb-radio-group [(ngModel)]="temperatureMode" name="temperature-mode">
-        <nb-radio value="cool">
-          <i class="nb-snowy-circled"></i>
-        </nb-radio>
-        <nb-radio value="warm">
-          <i class="nb-sunny-circled"></i>
-        </nb-radio>
-        <nb-radio value="heat">
-          <i class="nb-flame-circled"></i>
-        </nb-radio>
-        <nb-radio value="fan">
-          <i class="nb-loop-circled"></i>
-        </nb-radio>
-      </nb-radio-group> -->
+
     </nb-tab>
 
     <nb-tab tabTitle="Humidity">
@@ -50,20 +37,7 @@
         </ngx-temperature-dragger>
       </div>
 
-      <!-- <nb-radio-group [(ngModel)]="humidityMode" name="humidity-mode">
-        <nb-radio value="cool">
-          <i class="nb-snowy-circled"></i>
-        </nb-radio>
-        <nb-radio value="warm">
-          <i class="nb-sunny-circled"></i>
-        </nb-radio>
-        <nb-radio value="heat">
-          <i class="nb-flame-circled"></i>
-        </nb-radio>
-        <nb-radio value="fan">
-          <i class="nb-loop-circled"></i>
-        </nb-radio>
-      </nb-radio-group> -->
+
     </nb-tab>
   </nb-tabset>
 </nb-card>

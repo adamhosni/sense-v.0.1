@@ -16,10 +16,15 @@
   }
 }
 
+/* css to customize Leaflet default styles  */
+::ng-deep .custom .leaflet-popup-tip,
+::ng-deep .custom .leaflet-popup-content-wrapper {
+    background: #9fa5db;
+    // color: #ffffff;
+}
 
 
-
-::ng-deep .wifiCustom .leaflet-popup-tip, 
+::ng-deep .wifiCustom .leaflet-popup-tip,
 ::ng-deep .wifiCustom .leaflet-popup-content-wrapper {
     background: #ff7878;
     color: white;
@@ -39,8 +44,18 @@
 
 ::ng-deep .popup-table-row {
   background-color: rgb(192, 192, 192);
-}
+  th, td {
+    padding: 5px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 
+  }
+}
+::ng-deep tr:nth-child(even) {background-color: #f2f2f2;}
+::ng-deep th {
+  background-color: #4c5baf;
+  color: white;
+}
 
 ::ng-deep .button-details {
   background-color: rgba(121, 0, 0, 0.600); /* Green */
@@ -55,6 +70,7 @@
   display:block;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 5%;
 }
 ::ng-deep .button-details:hover {
   background-color: rgb(121, 0, 0); /* Green */
@@ -93,8 +109,9 @@
 }
 ::ng-deep .button-center{
   margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  margin-right: auto;
+  margin-top: 5%;
+  text-align: center;
 }
 
 ::ng-deep .model-full {

@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { UserService } from './detected-devices.service';
-import { ElectricityService } from './internal-temperature.service';
 import { OrdersChartService } from './devices-chart.service';
 import { ProfitChartService } from './detection-chart.service';
 import { TrafficListService } from './traffic-list.service';
@@ -20,7 +19,6 @@ import { StatsProgressBarService } from './stats-progress-bar.service';
 
 const SERVICES = [
   UserService,
-  ElectricityService,
   OrdersChartService,
   ProfitChartService,
   TrafficListService,

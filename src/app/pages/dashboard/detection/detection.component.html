@@ -27,7 +27,10 @@
                    pack="eva">
           </nb-icon>
         </button>
+        <input nbInput placeholder="Pick Date Range" [nbDatepicker]="formpicker" >
+        <nb-rangepicker #formpicker [min]="min" [max]="max" (rangeChange)="onEventStartEndRange($event)"></nb-rangepicker>
       </div>
+
     </div>
 
       <nb-list>
@@ -40,7 +43,7 @@
             badgeStatus="danger"
             badgePosition="bottom right"></nb-user>
 
-            <span class="caption">{{ c.vendor }}</span>
+            <span class="caption">{{ c.vendor == 'null' ? 'Unknown Vendor' : c.vendor }} </span>
             <button nbButton ghost status="danger" (click)="open(c.mac, c.time)">
               <nb-icon icon="eye-outline" pack="eva"></nb-icon>
             </button>
@@ -63,7 +66,7 @@
 
           <div class="centerSpans">
             <span class="caption">{{ c.ssid }} | </span>
-            <span class="caption">{{ c.vendor }}</span>
+            <span class="caption">{{ c.vendor == 'null' ? 'Unknown Vendor' : c.vendor }}</span>
           </div>
 
           <button nbButton ghost status="danger" (click)="open(c.mac, c.time, c.rssi)">
@@ -82,11 +85,6 @@
         <input type="text" placeholder="Search Device" status="basic" fullWidth nbInput>
         <button nbSuffix nbButton ghost >
           <nb-icon icon="search-outline"
-                   pack="eva">
-          </nb-icon>
-        </button>
-        <button nbSuffix nbButton ghost >
-          <nb-icon icon="plus-circle-outline"
                    pack="eva">
           </nb-icon>
         </button>

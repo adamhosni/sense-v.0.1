@@ -2,6 +2,7 @@
 // file: sense_core_mac.proto
 
 var sense_core_mac_pb = require("./sense_core_mac_pb");
+var sense_core_mac_data_pb = require("./sense_core_mac_data_pb");
 var grpc = require("@improbable-eng/grpc-web").grpc;
 
 var TargetListQueryService = (function () {
@@ -15,8 +16,8 @@ TargetListQueryService.TargetFullReadQuery = {
   service: TargetListQueryService,
   requestStream: false,
   responseStream: false,
-  requestType: sense_core_mac_pb.TargetListRequest,
-  responseType: sense_core_mac_pb.TargetListResponse
+  requestType: sense_core_mac_data_pb.TargetListRequest,
+  responseType: sense_core_mac_data_pb.TargetListResponse
 };
 
 TargetListQueryService.TargetDeltaReadQuery = {
@@ -24,8 +25,8 @@ TargetListQueryService.TargetDeltaReadQuery = {
   service: TargetListQueryService,
   requestStream: false,
   responseStream: false,
-  requestType: sense_core_mac_pb.TargetListRequest,
-  responseType: sense_core_mac_pb.TargetListResponse
+  requestType: sense_core_mac_data_pb.TargetListRequest,
+  responseType: sense_core_mac_data_pb.TargetListResponse
 };
 
 exports.TargetListQueryService = TargetListQueryService;

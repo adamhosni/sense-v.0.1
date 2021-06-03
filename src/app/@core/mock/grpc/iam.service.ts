@@ -14,22 +14,25 @@ export class IamService {
   requestMessage: google_protobuf_empty_pb.Empty;
 
   constructor() {
-    this.client = new IAMServiceClient('http://84.209.75.2:8000');
+
 
     this.requestMessage = new google_protobuf_empty_pb.Empty;
    }
 
-   authenticate( metadata: grpc.Metadata ): Promise <string>{
+   authenticate( metadata: grpc.Metadata, ip: string ): Promise <string>{
+    this.client = new IAMServiceClient('http://' + ip + ':8000');
+
     return new Promise((resolve, reject) =>{
 
       this.client.authenticate(this.requestMessage, metadata, (err, response:any) => {
 
         if (err) {
-          return reject(err);;
-        }
-        //console.log(response?.getAuthjwt());
+          // console.log(err);
+
+          return reject(err);
+        }else
+
         resolve(response.toObject().authjwt);
-       // console.log('Print Service: '+ response.toObject().authjwt);
       });
     });
 

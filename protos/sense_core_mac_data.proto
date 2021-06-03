@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package sense;
+
+import "google/protobuf/empty.proto";
+
+message TargetListRequest {
+    enum Type {
+        NONE = 0;
+        WIFI = 1;
+        BLTH = 2;
+        AP   = 3;
+	}
+    Type typeMAC = 1; /* MAC Type to distinguish between wifi and bt */
+}
+
+message TargetUpdateRequest {
+	enum Type {
+		NONE = 0;
+		WIFI = 1;
+		BLTH = 2;
+		AP	 = 3;
+	}
+	Type typeMAC      = 1;
+	repeated string TargetMAC  = 2;
+}
+
+message TargetListResponse {
+    message MacStruct {
+        string addrMAC    = 1;
+        bool markDeletion = 2;
+    }
+    repeated MacStruct targetMAC = 1;
+}

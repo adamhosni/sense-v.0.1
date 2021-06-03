@@ -6,6 +6,7 @@ import { ProfitChartComponent } from './charts/profit-chart.component';
 import { OrdersChart } from '../../../@core/data/devices-chart';
 import { ProfitChart } from '../../../@core/data/detection-chart';
 import { OrderProfitChartSummary, OrdersProfitChartData } from '../../../@core/data/devices-all-chart';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ngx-ecommerce-charts',
@@ -15,6 +16,7 @@ import { OrderProfitChartSummary, OrdersProfitChartData } from '../../../@core/d
 export class ECommerceChartsPanelComponent implements OnDestroy {
 
   private alive = true;
+  deviceIp: string;
 
   chartPanelSummary: OrderProfitChartSummary[];
   period: string = 'week';
@@ -24,10 +26,15 @@ export class ECommerceChartsPanelComponent implements OnDestroy {
   @ViewChild('ordersChart', { static: true }) ordersChart: OrdersChartComponent;
   @ViewChild('profitChart', { static: true }) profitChart: ProfitChartComponent;
 
-  constructor(private ordersProfitChartService: OrdersProfitChartData) {
-    this.ordersProfitChartService.getOrderProfitChartSummary()
+  constructor(private ordersProfitChartService: OrdersProfitChartData,
+    private activatedRoute: ActivatedRoute) {
+    this.deviceIp = this.activatedRoute.snapshot.params.deviceIp;
+
+    this.ordersProfitChartService.getOrderProfitChartSummary(this.deviceIp)
       .pipe(takeWhile(() => this.alive))
       .subscribe((summary) => {
+        console.log(summary);
+
         this.chartPanelSummary = summary;
       });
 
@@ -45,7 +52,7 @@ export class ECommerceChartsPanelComponent implements OnDestroy {
   }
 
   changeTab(selectedTab) {
-    if (selectedTab.tabTitle === 'Profit') {
+    if (selectedTab.tabTitle === 'Details') {
       this.profitChart.resizeChart();
     } else {
       this.ordersChart.resizeChart();

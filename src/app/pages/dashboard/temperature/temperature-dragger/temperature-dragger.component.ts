@@ -43,23 +43,7 @@ export class TemperatureDraggerComponent implements AfterViewInit, OnChanges {
   @Input() max = 100; // max output value
   @Input() step = 0.1;
 
-  @Output() power = new EventEmitter<boolean>();
 
-  @HostListener('window:mouseup', ['$event'])
-  onMouseUp(event) {
-    this.recalculateValue(event);
-    this.isMouseDown = false;
-  }
-
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    this.recalculateValue(event);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.invalidate();
-  }
 
   off = false;
   oldValue: number;
@@ -99,6 +83,7 @@ export class TemperatureDraggerComponent implements AfterViewInit, OnChanges {
     setTimeout(() => {
       this.invalidate();
       this.init = true;
+
     });
   }
 
@@ -108,28 +93,7 @@ export class TemperatureDraggerComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  // STopped the fuctionality of Drag
 
-  // mouseDown(event) {
-  //   this.isMouseDown = true;
-  //   if (!this.off) {
-  //     this.recalculateValue(event, true);
-  //   }
-  // }
-
-  switchPower() {
-    this.off = !this.off;
-    this.power.emit(!this.off);
-
-    if (this.off) {
-      this.oldValue = this.value;
-      this.value = this.min;
-    } else {
-      this.value = this.oldValue;
-    }
-
-    this.invalidatePinPosition();
-  }
 
   getUrlPath(id: string) {
     const baseHref = this.locationStrategy.getBaseHref().replace(/\/$/, '');

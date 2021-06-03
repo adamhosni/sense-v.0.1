@@ -2,6 +2,7 @@
 // file: sense_core_mac.proto
 
 import * as sense_core_mac_pb from "./sense_core_mac_pb";
+import * as sense_core_mac_data_pb from "./sense_core_mac_data_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 
 type TargetListQueryServiceTargetFullReadQuery = {
@@ -9,8 +10,8 @@ type TargetListQueryServiceTargetFullReadQuery = {
   readonly service: typeof TargetListQueryService;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof sense_core_mac_pb.TargetListRequest;
-  readonly responseType: typeof sense_core_mac_pb.TargetListResponse;
+  readonly requestType: typeof sense_core_mac_data_pb.TargetListRequest;
+  readonly responseType: typeof sense_core_mac_data_pb.TargetListResponse;
 };
 
 type TargetListQueryServiceTargetDeltaReadQuery = {
@@ -18,8 +19,8 @@ type TargetListQueryServiceTargetDeltaReadQuery = {
   readonly service: typeof TargetListQueryService;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof sense_core_mac_pb.TargetListRequest;
-  readonly responseType: typeof sense_core_mac_pb.TargetListResponse;
+  readonly requestType: typeof sense_core_mac_data_pb.TargetListRequest;
+  readonly responseType: typeof sense_core_mac_data_pb.TargetListResponse;
 };
 
 export class TargetListQueryService {
@@ -61,22 +62,22 @@ export class TargetListQueryServiceClient {
 
   constructor(serviceHost: string, options?: grpc.RpcOptions);
   targetFullReadQuery(
-    requestMessage: sense_core_mac_pb.TargetListRequest,
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: sense_core_mac_pb.TargetListResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
   ): UnaryResponse;
   targetFullReadQuery(
-    requestMessage: sense_core_mac_pb.TargetListRequest,
-    callback: (error: ServiceError|null, responseMessage: sense_core_mac_pb.TargetListResponse|null) => void
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
   ): UnaryResponse;
   targetDeltaReadQuery(
-    requestMessage: sense_core_mac_pb.TargetListRequest,
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: sense_core_mac_pb.TargetListResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
   ): UnaryResponse;
   targetDeltaReadQuery(
-    requestMessage: sense_core_mac_pb.TargetListRequest,
-    callback: (error: ServiceError|null, responseMessage: sense_core_mac_pb.TargetListResponse|null) => void
+    requestMessage: sense_core_mac_data_pb.TargetListRequest,
+    callback: (error: ServiceError|null, responseMessage: sense_core_mac_data_pb.TargetListResponse|null) => void
   ): UnaryResponse;
 }
 

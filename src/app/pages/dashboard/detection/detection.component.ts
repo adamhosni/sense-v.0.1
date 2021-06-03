@@ -1,47 +1,58 @@
-import { AfterViewInit, Component, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-
-import { Contacts, RecentUsers, UserData } from '../../../@core/data/devices';
-import { IamService } from 'app/@core/mock/grpc/iam.service';
 import { DataQueryService } from 'app/@core/mock/grpc/data-query.service';
 import { grpc } from '@improbable-eng/grpc-web';
-import { NbDialogService } from '@nebular/theme';
+import { NbDatepickerComponent, NbDateService, NbDialogService } from '@nebular/theme';
 import { DetectionLookUpComponent } from './detection-look-up/detection-look-up.component';
-import { TargetListService } from 'app/@core/mock/grpc/target-list.service';
-import { TargetListQService } from 'app/@core/mock/grpc/target-list-q.service';
+import { ActivatedRoute } from '@angular/router';
+import { ItemQuery, TimeRange } from 'app/@protos/sense_core_datarequest_pb';
+import { time } from 'console';
 
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'ngx-detection',
   styleUrls: ['./detection.component.scss'],
   templateUrl: './detection.component.html',
 })
-export class DetectionComponent implements OnDestroy, AfterViewInit {
+export class DetectionComponent implements OnDestroy, OnInit {
+
+  @ViewChild(NbDatepickerComponent) formpicker: NbDatepickerComponent<Date>;
 
   private alive = true;
 
   searchText;
   loading = true;
-
-  authjwt:any;
+  deviceIp: string;
 
   btDevices: any[]; //BTFramePointMsg
   wfDevices: any[]; //WiFiFramePointMsg
   accessPoints: any[];
-  allDevices: any[] = [];
-  // recent: any[];
+
   nBTdevice: number;
   nWFdevices: number;
   nAccessPoints: number;
 
-  constructor(private userService: UserData, private dialogService: NbDialogService,
-    private iamService: IamService, private daraQueryService: DataQueryService,
-    private targetListService: TargetListService, private targetListQueryService: TargetListQService) {
+  min: Date;
+  max: Date;
 
-      this.logIn();
-      // this.loading = true;
 
+  constructor(private dialogService: NbDialogService, private daraQueryService: DataQueryService,
+    private activatedRoute: ActivatedRoute, protected dateService: NbDateService<Date> ) {
+
+      this.min = this.dateService.addMonth(this.dateService.today(), -1);
+      this.max = this.dateService.today();
+  }
+
+  onEventStartEndRange(event){
+    if (event.end !== undefined){
+      // console.log(event);
+      let startDate = (event.start).getTime();
+      let endDate = (event.end).getTime();
+      let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
+      const auth = new grpc.Metadata();
+      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+      this.fetchBTItemsRange( auth, this.deviceIp, startDate, endDate);
+    }
   }
 
   open(mac, time, rssi) {
@@ -56,16 +67,24 @@ export class DetectionComponent implements OnDestroy, AfterViewInit {
         mac: mac,
         rssi: rssi
 
-      },  });
-      // .onClose.subscribe(name => name && this.names.push(name));
+      },
+    });
   }
-ngAfterViewInit(){
-  // let loader = this.renderer.selectRootElement('#loader');
-  //   this.renderer.setStyle(loader, 'display', 'none');
+  ngOnInit(){
 
-  // this.loading = false;
+    this.deviceIp = this.activatedRoute.snapshot.params.deviceIp;
+    let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
+      const auth = new grpc.Metadata();
+      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
 
-}
+      this.fetchBTItems( auth , this.deviceIp );
+      this.fetchWiFiItems( auth , this.deviceIp );
+      this.fetchAP( auth , this.deviceIp );
+
+      setTimeout(() => this.loading = false, 8000);
+      // console.log(this.formpicker);
+  }
+
 
 downloadFile(data: any) {
   console.log('downloadFile Works');
@@ -91,94 +110,63 @@ downloadFile(data: any) {
   a.remove();
 }
 
-  logIn(): void{
 
-    const auth = new grpc.Metadata();
-    auth.headersMap ["Authorization"] = ['Basic c2Vuc2U6R01HZ3BHZz0='];
 
-     this.iamService.authenticate(auth).then(response => {
+  // fetchAPItems( auth: any ){
 
-      this.authjwt = response;
-      // this.GetDeviceInfo();
-      this.fetchBTItems();
-      this.fetchWiFiItems();
-      this.fetchAPItems();
-      this.fetchAP();
+  //    this.daraQueryService.fetchAPItems(auth).then(resp => {
+  //       // console.log(resp);
 
-      //this.targetDeleteQuery();
-      // this.targetFullReadQuery()
-      setTimeout(() => this.loading = false, 8000);
-    });
-  }
+  //     });
 
-  fetchAPItems(){
+  // }
 
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.daraQueryService.fetchAPItems(auth).then(resp => {
-        console.log(resp);
+  fetchWiFiItems( auth: any, ip: string ){
 
-      });
-       // console.log(response);
-       // this.deviceInfo = response;
-  }
-
-  fetchWiFiItems(){
-
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.daraQueryService.fetchWiFiItems(auth).then(resp =>{
+    this.daraQueryService.fetchWiFiItems(auth, ip).then(resp =>{
         // console.log(resp);
         this.wfDevices = resp;
-        // this.accessPoints = resp;
-        if (this.wfDevices[2] == null) this.wfDevices[2] = 'Unavailable Vendor';// =='null'
         this.nWFdevices = this.wfDevices.length;
-
+        localStorage.setItem('sense_nwfd'+ip, '' + this.nWFdevices);
       });
   }
 
-  fetchBTItems(){
+  fetchBTItems( auth: any, ip: string ){
 
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.daraQueryService.fetchBTItems(auth).then(resp =>{
-        // console.log(resp);
+      this.daraQueryService.fetchBTItems(auth, ip).then(resp =>{
         this.btDevices = resp;
-        // this.allDevices.concat(this.btDevices);
         this.nBTdevice = this.btDevices.length;
+        localStorage.setItem('sense_nbtd'+ip, '' + this.nBTdevice);
       });
   }
+  fetchBTItemsRange( auth: any, ip: string , start, end){
+    let timeRange: TimeRange = new TimeRange();
+    timeRange.setFromepochms(start);
+    timeRange.setToepochms(end);
+    console.log(timeRange);
 
-  fetchAP(){
 
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.daraQueryService.fetchAP(auth).then(resp =>{
+    this.daraQueryService.fetchBTItemsRange(auth, ip, timeRange).then(resp =>{
+      this.btDevices = resp;
+      this.nBTdevice = this.btDevices.length;
+      // localStorage.setItem('sense_nbtd'+ip, '' + this.nBTdevice);
+    });
+}
+
+
+  fetchAP( auth: any, ip: string ){
+
+      this.daraQueryService.fetchAP(auth, ip).then(resp =>{
         // console.log(resp);
         this.accessPoints = resp;
         this.nAccessPoints = this.accessPoints.length;
-        // this.allDevices.concat(this.btDevices);
-        // this.nBTdevice = this.btDevices.length;
+        localStorage.setItem('sense_napd'+ip, '' + this.nAccessPoints);
+
       });
   }
 
-  targetDeleteQuery(){
 
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.targetListService.targetDeleteQuery(auth).then(resp =>{
-        console.log(resp);
-      });
-  }
 
-  targetFullReadQuery(){
-
-    const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+this.authjwt];
-      this.targetListQueryService.targetFullReadQuery(auth).then(resp =>{
-        console.log(resp);
-      });
-  }
 
   ngOnDestroy() {
     this.alive = false;

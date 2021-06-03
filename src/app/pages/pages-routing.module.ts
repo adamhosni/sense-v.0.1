@@ -5,23 +5,13 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MainComponent } from './main/main.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
-import { NgxLoginComponent } from 'app/auth/login/login.component';
-import { NbAuthComponent, NbLoginComponent } from '@nebular/auth';
+// import { NgxLoginComponent } from 'app/auth/login/login.component';
+// import { NbAuthComponent, NbLoginComponent } from '@nebular/auth';
 
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
-    // {
-    //   path: 'ngx-login',
-    //   component: NgxLoginComponent,
-
-    // },
-    {
-      path: '',
-      redirectTo: 'main-dashboard',
-      pathMatch: 'full',
-    },
     {
       path: 'main-dashboard',
       component: MainComponent,
@@ -40,6 +30,11 @@ const routes: Routes = [{
       path: 'miscellaneous',
       loadChildren: () => import('./miscellaneous/miscellaneous.module')
         .then(m => m.MiscellaneousModule),
+    },
+    {
+      path: '',
+      redirectTo: 'main-dashboard',
+      pathMatch: 'full',
     },
     {
       path: '**',
