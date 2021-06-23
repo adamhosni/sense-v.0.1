@@ -55,7 +55,32 @@
     [badgeText]="nWFdevices"
     badgePosition="bottom right"
     badgeStatus="warning">
-      <nb-list-item class="contact" *ngFor="let c of wfDevices">
+
+    <div class="row">
+      <div class="sizeSearchBar">
+        <nb-form-field>
+          <input type="text" placeholder="Search device by mac@ " status="basic" [(ngModel)]="searchText" fullWidth nbInput>
+          <button nbSuffix nbButton ghost >
+            <nb-icon icon="search-outline"
+                     pack="eva">
+            </nb-icon>
+          </button>
+        </nb-form-field>
+      </div>
+
+      <div class=".col-md-1">
+        <button nbSuffix nbButton ghost nbTooltip="Download CSV file" nbTooltipIcon="download-outline" nbTooltipStatus="danger" (click)="downloadFile(wfDevices)">
+          <nb-icon icon="download-outline"
+                   pack="eva">
+          </nb-icon>
+        </button>
+        <input nbInput placeholder="Pick Date Range" [nbDatepicker]="formpicker" >
+        <nb-rangepicker #formpicker [min]="min" [max]="max" (rangeChange)="onEventStartEndRange($event)"></nb-rangepicker>
+      </div>
+
+    </div>
+
+      <nb-list-item class="contact" *ngFor="let c of wfDevices | appFilter: searchText : 'mac'">
         <nb-user picture="https://akveo.github.io/eva-icons/outline/png/128/wifi-outline.png"
           [name]="c.mac"
           [title]="c.type"

@@ -51,9 +51,9 @@ interface SensorNorway {
       <nb-card-body >
         <div id="map" ></div>
         <div class="leaflet-bottom leaflet-right">
-        <button ion-button class="button-action" onclick="Action()"  block>Action!</button>
     </div>
       </nb-card-body>
+
     </nb-card>
   `,
 })
@@ -85,7 +85,8 @@ export class LeafletComponent implements AfterViewInit{
 
   wRangeExist : boolean = false;
   bRangeExist : boolean;
-  pointsLayer: L.GeoJSON;
+  pointsLayerWifi: L.GeoJSON;
+  pointsLayerBlue: L.GeoJSON;
 
   smallIcon = new L.Icon({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -245,10 +246,6 @@ addMarker(latLng, ip: string): void {
     const auth = new grpc.Metadata();
     auth.headersMap ["Authorization"] = ['Bearer ' + tokenSense];
 
-
-
-
-
     const marker = L.marker(latLng, { icon: this.smallIcon });
 
     this.getDeviceDiagnostics(auth, ip, marker);
@@ -321,11 +318,14 @@ appendPopupToMarker(ip, marker, inttemp:number, exttemp: number, humidity){
       `) ;
       var popUpOptions: L.PopupOptions ={
         'maxWidth': 500,
-        'className' : 'custom'
+        'className' : 'custom',
+
       }
       this.markers.addLayer(marker.bindPopup(text, popUpOptions));
 
+
       marker.on('click', (clickEvent) => {
+        // Center view on Marker
         this.centerLeafletMapOnMarker (this.map, marker, ip);
 
         //Redirect to sense-dash when clicking on Dash Popup
@@ -336,8 +336,6 @@ appendPopupToMarker(ip, marker, inttemp:number, exttemp: number, humidity){
       });
 }
 
-
-
 centerLeafletMapOnMarker(map:L.Map, marker:L.Marker, ip: string) {
 
   var latLng = [ marker.getLatLng() ];
@@ -345,107 +343,155 @@ centerLeafletMapOnMarker(map:L.Map, marker:L.Marker, ip: string) {
 
   this.wifiRange = L.circle(marker.getLatLng(), {
     color: 'red',
-    fillColor: '#f02',
-    fillOpacity: 0.1,
+    fillColor: 'red',
+    fillOpacity: 0.05,
     radius: 250,
     weight: 2,
-    opacity: 0.5,
+    opacity: 0.3,
   });
 
   this.bthRange = L.circle(marker.getLatLng(), {
     color: 'blue',
     fillColor: 'blue',
-    fillOpacity: 0.1,
+    fillOpacity: 0.05,
     radius: 100,
     weight: 2,
-    opacity: 0.5,
+    opacity: 0.3,
   })
+
+
+  let tokenSense = localStorage.getItem('token_sense' + ip);
+    const auth = new grpc.Metadata();
+    auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+
+    var timerange: TimeRange = new TimeRange();
+
+    const today = new Date();//.setHours(0,0,0,0)
+    const yesterday = new Date();
+    yesterday.setDate(new Date().getDate() - 1);
+    // yesterday.getTime();
+
+    timerange.setFromepochms(yesterday.getTime());//1621810800000
+    timerange.setToepochms(today.getTime());//1622156400000
+    var nwfdev= this.fetchWiFiItems(auth, ip, timerange);
+    console.log(this.nWFdevices);
+
+
+
+    var nbtdev= this.fetchBTItems(auth, ip, timerange);
 
   if (!map.getBounds().equals(markerBounds)){
     map.flyToBounds(markerBounds, {'duration':1.5 , 'animate':true, 'maxZoom':16} );
   }
 
   document.getElementById("button-wifi").addEventListener("click", Event => {
-    this.showWifiRange(map, marker, ip);
-
+    this.showWifiRange(map, nwfdev);
   });
 
-const buttonBT = document.getElementById("button-bth");
-buttonBT?.addEventListener("click", Event => {
-    if (!this.bRangeExist){
-    this.bthRange.addTo(map)
-    this.bRangeExist = !this.bRangeExist;
-    this.showBTRange(map, marker, ip);
-  }else {
-    map.removeLayer(this.bthRange);
-    this.bRangeExist = !this.bRangeExist;
-  }
+  document.getElementById("button-bth").addEventListener("click", Event => {
+    this.showBTRange(map, nbtdev);
   });
+
 
 }
 
-showBTRange(map, marker, ip){
-  var i =0;
-  var bounds = this.bthRange.getBounds();
+onEventStartEndRange(event){
+  if (event.end !== undefined){
+    // console.log(event);
+    let startDate = (event.start).getTime();
+    let endDate = (event.end).getTime();
+    let timerange = new TimeRange();
+    timerange.setFromepochms(startDate);
+    timerange.setToepochms(endDate);
 
-  let tokenSense = localStorage.getItem('token_sense' + ip);
-      const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+    this.backDevService.getAllDevices(this.jwToken).subscribe( data => {
 
-      var timerange: TimeRange = new TimeRange();
-      timerange.setFromepochms(1621810800000);
-      timerange.setToepochms(1622156400000);
-
-    var nbtdev= this.fetchBTItems(auth, ip, timerange);
-    while ( i < nbtdev ){
-
-
-      var southWest = bounds.getSouthWest();
-	    var northEast = bounds.getNorthEast();
-      var lngSpan = northEast.lng - southWest.lng ;
-      var latSpan = northEast.lat - southWest.lat ;
-      var lat = southWest.lat + latSpan * Math.random() ;
-      var lng = southWest.lng + lngSpan * Math.random();
+      for(let dev in data) {
+        let child = data[dev];
+        let tokenSense = localStorage.getItem('token_sense' + child.dIp);
 
 
+        if ( tokenSense !==  null){
 
+          const auth = new grpc.Metadata();
+          auth.headersMap ["Authorization"] = ['Bearer ' + tokenSense];
+          this.fetchBTItems( auth, child.dIp, timerange);
 
-      var data_points: FeatureCollection = {
-        "type": "FeatureCollection",
-        "features": [
-        { "type": "Feature", "properties": { "name": this.tabMacBt[i] }, "geometry": { "type": "Point", "coordinates": [ lng, lat ] } },
-        ]};
-
-    var pointLayer = L.geoJSON(null, {
-      pointToLayer: function(feature,latlng){
-        var label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
-        return new L.CircleMarker(latlng, {
-          radius: 1,
-          color: 'blue',
-          opacity: 0.75,
-          weight: 7
-        }).bindTooltip(label, {permanent: false, opacity: 0.7});
+          // this.deviceConfig(auth, child.dIp);
         }
-      });
-    pointLayer.addData(data_points);
-    map.addLayer(pointLayer);
+        // this.map.addLayer(this.markers);
+      }
+    });
 
-    }
+    // let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
+    // const auth = new grpc.Metadata();
+    // auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
+    // this.fetchBTItems( auth, this.deviceIp, startDate, endDate);
+  }
 }
 
+layerGroupBlue = new L.LayerGroup();
 
+showBTRange(map, nbtdev){
+  if (this.bRangeExist) {
+    map.removeLayer(this.layerGroupBlue);
 
-deleteWifiRange(map){
-  map.removeLayer(this.wifiRange);
-  if(map.hasLayer(this.pointsLayer)) map.removeLayer(this.pointsLayer);
-  this.wRangeExist = !this.wRangeExist;
+    this.bRangeExist = !this.bRangeExist;
+
+    console.log(this.bRangeExist);
+  }
+  else {
+
+    this.bRangeExist = !this.bRangeExist;
+    console.log(this.bRangeExist);
+
+    this.layerGroupBlue.clearLayers();
+    this.layerGroupBlue.addTo(map);
+    this.layerGroupBlue.addLayer(this.bthRange);
+
+    var bounds = this.bthRange.getBounds();
+    var southWest = bounds.getSouthWest();
+	  var northEast = bounds.getNorthEast();
+    var lngSpan = northEast.lng - southWest.lng ;
+    var latSpan = northEast.lat - southWest.lat ;
+    var i = 0;
+      while ( i < nbtdev ){
+
+        console.log(i);
+
+        var lat = southWest.lat + latSpan * Math.random() ;
+        var lng = southWest.lng + lngSpan * Math.random();
+        var data_points: FeatureCollection = {
+          "type": "FeatureCollection",
+          "features": [
+          { "type": "Feature", "properties": { "name": this.tabMacBt[i] }, "geometry": { "type": "Point", "coordinates": [ lng, lat ] } } ]
+        };
+
+        this.pointsLayerBlue = L.geoJSON(null, {
+          pointToLayer: function(feature,latlng){
+            var label = String(feature.properties.name);
+            return new L.CircleMarker(latlng, {
+              radius: 1,
+              color: 'blue',
+              opacity: 0.75,
+              weight: 7
+            }).bindTooltip(label, {permanent: false, opacity: 0.7});
+          }
+        });
+        this.pointsLayerBlue.addData(data_points);
+        this.layerGroupBlue.addLayer(this.pointsLayerBlue);
+
+        i++;
+      }
+
+  }
 }
 
 nWFdevices: number;
 tabMacWf = [];
-fetchWiFiItems( auth: any, ip: string ){
+fetchWiFiItems( auth: any, ip: string, timerange ){
 
-  this.daraQueryService.fetchWiFiItems(auth, ip).then(resp =>{
+  this.daraQueryService.fetchWiFiItemsRange(auth, ip, timerange).then(resp =>{
 
       let wfDevices = resp;
       wfDevices.forEach( device => {
@@ -457,8 +503,8 @@ fetchWiFiItems( auth: any, ip: string ){
     return this.nWFdevices;
 }
 
-tabMacBt = [];
 nBTdevices: number;
+tabMacBt = [];
 fetchBTItems( auth: any, ip: string , timerange){
 
   this.daraQueryService.fetchBTItemsRange(auth, ip, timerange).then(resp =>{
@@ -467,102 +513,63 @@ fetchBTItems( auth: any, ip: string , timerange){
       btDevices.forEach( device => {
         this.tabMacBt.push(device.mac);
       });
-      this.nWFdevices = btDevices.length;
+      this.nBTdevices = btDevices.length;
     });
     return this.nBTdevices;
 }
 
 
+layerGroupWifi = new L.LayerGroup();
 
-
-showWifiRange (map, marker, ip: string){
+showWifiRange (map, nwfdev){
   if (this.wRangeExist) {
-    this.deleteWifiRange(map);
+    map.removeLayer(this.layerGroupWifi);
+    this.wRangeExist = !this.wRangeExist;
     console.log(this.wRangeExist);
   }
   else {
-    this.wifiRange.addTo(map);
-  // .bindPopup(customPopup, customOptions)
-  //   .on("popupopen", (a) => {
-  //     var popUp = a.target.getPopup();
-  //     popUp.getElement()
-  //    .querySelector(".wifiDetails")
-  //    .addEventListener("click", e => {
-  //      this.showMoreWifi(map, marker, this.wifiRange);
-  //    });
-  // });
+
     this.wRangeExist = !this.wRangeExist;
     console.log(this.wRangeExist);
 
-    let tokenSense = localStorage.getItem('token_sense' + ip);
-      const auth = new grpc.Metadata();
-      auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
-
-    var nwfdev= this.fetchWiFiItems(auth, ip);
-
-    var points = [];
-    var i =0;
-    var neg = -1;
+    this.layerGroupWifi.clearLayers();
+    this.layerGroupWifi.addTo(map);
+    this.layerGroupWifi.addLayer(this.wifiRange);
 
     var bounds = this.wifiRange.getBounds();
-    // console.log(bounds);
-    // map.setView(bounds);
-
+    var southWest = bounds.getSouthWest();
+	  var northEast = bounds.getNorthEast();
+    var lngSpan = northEast.lng - southWest.lng ;
+    var latSpan = northEast.lat - southWest.lat ;
+    var i = 0;
       while ( i < nwfdev ){
 
-      var southWest = bounds.getSouthWest();
-	    var northEast = bounds.getNorthEast();
-      var lngSpan = northEast.lng - southWest.lng ;
-      var latSpan = northEast.lat - southWest.lat ;
-      var lat = southWest.lat + latSpan * Math.random() ;
-      var lng = southWest.lng + lngSpan * Math.random();
+        console.log(i);
 
+        var lat = southWest.lat + latSpan * Math.random() ;
+        var lng = southWest.lng + lngSpan * Math.random();
+        var data_points: FeatureCollection = {
+          "type": "FeatureCollection",
+          "features": [
+          { "type": "Feature", "properties": { "name": this.tabMacWf[i] }, "geometry": { "type": "Point", "coordinates": [ lng, lat ] } } ]
+        };
 
-      var data_points: FeatureCollection = {
-        "type": "FeatureCollection",
-        "features": [
-        { "type": "Feature", "properties": { "name": this.tabMacWf[i] }, "geometry": { "type": "Point", "coordinates": [ lng, lat ] } },
-        ]};
+        this.pointsLayerWifi = L.geoJSON(null, {
+          pointToLayer: function(feature,latlng){
+            var label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
+            return new L.CircleMarker(latlng, {
+              radius: 1,
+              color: 'red',
+              opacity: 0.75,
+              weight: 7
+            }).bindTooltip(label, {permanent: false, opacity: 0.7});
+          }
+        });
+        this.pointsLayerWifi.addData(data_points);
+        this.layerGroupWifi.addLayer(this.pointsLayerWifi);
 
-    this.pointsLayer = L.geoJSON(null, {
-      pointToLayer: function(feature,latlng){
-        var label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
-        return new L.CircleMarker(latlng, {
-          radius: 1,
-          color: 'red',
-          opacity: 0.75,
-          weight: 7
-        }).bindTooltip(label, {permanent: false, opacity: 0.7});
-        }
-      });
-      this.pointsLayer.addData(data_points);
-      map.addLayer(this.pointsLayer);
-
-      i++;
-    }
-
-
-    // this.pointsLayer =L.geoJSON();
-
-    // for (let point of points) {
-    //   L.geoJSON(point, {
-    //     pointToLayer: function (feature, latlng) {
-    //         return L.circleMarker(latlng, {
-    //             // Stroke properties
-    //             color: 'red',
-    //             opacity: 0.75,
-    //             weight: 10,
-
-    //             // Fill properties
-    //             // fillColor: 'black',
-    //             // fillOpacity: 0.25,
-    //             radius: 1
-    //         });
-    //     }
-    //   }).addTo(this.pointsLayer);
-
-    // }
-    // this.pointsLayer.addTo(map);
+        i++;
+      }
 
   }
 
@@ -586,7 +593,8 @@ showWifiRange (map, marker, ip: string){
 
 
 showMoreWifi(map, marker, wifiRange){
-  this.deleteWifiRange(map);
+  map.removeLayer(this.layerGroupWifi);
+  this.wRangeExist = !this.wRangeExist;
 
   var wifi500 = L.circle(marker.getLatLng(), {
     color: 'yellow',
@@ -618,7 +626,7 @@ showMoreWifi(map, marker, wifiRange){
   });
   wifi100.addTo(map);
 
-  var pl = this.pointsLayer.addTo(map);
+  // var pl = this.pointsLayer.addTo(map);
 
   //______________________
 // var deviceId = this.getSensorByLatLng([marker.getLatLng()]).id;
@@ -634,8 +642,6 @@ showMoreWifi(map, marker, wifiRange){
 
 
   getAllSensors(){
-    // return[]}
-
 
     let sensor1: Sensor = {
       lng: 39.8837078586038,

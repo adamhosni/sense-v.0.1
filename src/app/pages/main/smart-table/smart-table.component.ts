@@ -137,10 +137,13 @@ export class SmartTableComponent implements OnInit{
 
   logIn(ip: string, pass: string): void{
 
-    pass = 'c2Vuc2U6R01HZ3BHZz0=';
+    var basic = btoa('sense:' + pass); // base64 Encoding
+
+    // pass = 'c2Vuc2U6R01HZ3BHZz0='; // sense:GMGgpGg=
+    // pass = 'c2Vuc2U6cjNaQ0I4az0='; // r3ZCB8k= // sense:r3ZCB8k=
 
     const auth = new grpc.Metadata();
-    auth.headersMap ["Authorization"] = ['Basic ' + pass];
+    auth.headersMap ["Authorization"] = ['Basic ' + basic];
 
      this.iamService.authenticate(auth, ip).then(response => {
 
@@ -178,7 +181,7 @@ export class SmartTableComponent implements OnInit{
       this.deviceSettingsService.getDeviceInfo(auth, ip).then(response => {
         this.data[dev]['deviceId'] = response.getDeviceid();
         //Load The table
-
+        this.source.load(this.data);
       });
   }
 

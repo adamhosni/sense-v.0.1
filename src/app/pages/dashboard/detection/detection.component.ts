@@ -51,7 +51,8 @@ export class DetectionComponent implements OnDestroy, OnInit {
       let tokenSense = localStorage.getItem('token_sense' + this.deviceIp);
       const auth = new grpc.Metadata();
       auth.headersMap ["Authorization"] = ['Bearer '+tokenSense];
-      this.fetchBTItemsRange( auth, this.deviceIp, startDate, endDate);
+      // this.fetchBTItemsRange( auth, this.deviceIp, startDate, endDate);
+      this.fetchWiFiItemsRange( auth, this.deviceIp, startDate, endDate);
     }
   }
 
@@ -130,6 +131,20 @@ downloadFile(data: any) {
         localStorage.setItem('sense_nwfd'+ip, '' + this.nWFdevices);
       });
   }
+  fetchWiFiItemsRange( auth: any, ip: string, start, end ){
+
+    let timeRange: TimeRange = new TimeRange();
+    timeRange.setFromepochms(start);
+    timeRange.setToepochms(end);
+    // console.log(timeRange);
+
+    this.daraQueryService.fetchWiFiItemsRange(auth, ip, timeRange).then(resp =>{
+        console.log(resp);
+        this.wfDevices = resp;
+        this.nWFdevices = this.wfDevices.length;
+        // localStorage.setItem('sense_nwfd'+ip, '' + this.nWFdevices);
+      });
+  }
 
   fetchBTItems( auth: any, ip: string ){
 
@@ -143,7 +158,7 @@ downloadFile(data: any) {
     let timeRange: TimeRange = new TimeRange();
     timeRange.setFromepochms(start);
     timeRange.setToepochms(end);
-    console.log(timeRange);
+    // console.log(timeRange);
 
 
     this.daraQueryService.fetchBTItemsRange(auth, ip, timeRange).then(resp =>{
@@ -151,7 +166,7 @@ downloadFile(data: any) {
       this.nBTdevice = this.btDevices.length;
       // localStorage.setItem('sense_nbtd'+ip, '' + this.nBTdevice);
     });
-}
+  }
 
 
   fetchAP( auth: any, ip: string ){
@@ -169,6 +184,16 @@ downloadFile(data: any) {
 
 
   ngOnDestroy() {
+
+
+    // fetchAPItems( auth: any ){
+
+    //    this.daraQueryService.fetchAPItems(auth).then(resp => {
+    //       // console.log(resp);
+
+    //     });
+
+    // }
     this.alive = false;
   }
 }
