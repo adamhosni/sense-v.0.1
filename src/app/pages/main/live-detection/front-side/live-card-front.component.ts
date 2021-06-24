@@ -12,10 +12,10 @@ import { LiveUpdateChart, EarningData } from '../../../../@core/data/live-detect
 export class LiveCardFrontComponent implements OnDestroy, OnInit {
   private alive = true;
 
-  @Input() selectedCurrency: string = 'Bitcoin';
+  @Input() selectedFeature: string = 'All';
 
   intervalSubscription: Subscription;
-  currencies: string[] = ['Bitcoin', 'Tether', 'Ethereum'];
+  features: string[] = ['All', 'Wifi', 'Bluetooth'];
   currentTheme: string;
   earningLiveUpdateCardData: LiveUpdateChart;
   liveUpdateChartData: { value: [string, number] }[];
@@ -30,29 +30,29 @@ export class LiveCardFrontComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.getEarningCardData(this.selectedCurrency);
+    this.getEarningCardData(this.selectedFeature);
   }
 
-  changeCurrency(currency) {
-    if (this.selectedCurrency !== currency) {
-      this.selectedCurrency = currency;
+  changeFeature(feature) {
+    if (this.selectedFeature !== feature) {
+      this.selectedFeature = feature;
 
-      this.getEarningCardData(this.selectedCurrency);
+      this.getEarningCardData(this.selectedFeature);
     }
   }
 
-  private getEarningCardData(currency) {
-    this.earningService.getEarningCardData(currency)
+  private getEarningCardData(feature) {
+    this.earningService.getEarningCardData(feature)
       .pipe(takeWhile(() => this.alive))
       .subscribe((earningLiveUpdateCardData: LiveUpdateChart) => {
         this.earningLiveUpdateCardData = earningLiveUpdateCardData;
         this.liveUpdateChartData = earningLiveUpdateCardData.liveChart;
 
-        this.startReceivingLiveData(currency);
+        this.startReceivingLiveData(feature);
       });
   }
 
-  startReceivingLiveData(currency) {
+  startReceivingLiveData(feature) {
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
@@ -60,7 +60,7 @@ export class LiveCardFrontComponent implements OnDestroy, OnInit {
     this.intervalSubscription = interval(200)
       .pipe(
         takeWhile(() => this.alive),
-        switchMap(() => this.earningService.getEarningLiveUpdateCardData(currency)),
+        switchMap(() => this.earningService.getEarningLiveUpdateCardData(feature)),
       )
       .subscribe((liveUpdateChartData: any[]) => {
         this.liveUpdateChartData = [...liveUpdateChartData];

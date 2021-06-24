@@ -20,7 +20,7 @@ export class ProfitBarAnimationChartService extends ProfitBarAnimationChartData 
       .map((_, index) => {
         const oneFifth = index / 5;
 
-        return (Math.sin(oneFifth) * (oneFifth - 10) + index / 6) * 5;
+        return (Math.sin(oneFifth+10) * (oneFifth - 10) + index / 6) * 5;
       });
   }
 
@@ -29,7 +29,7 @@ export class ProfitBarAnimationChartService extends ProfitBarAnimationChartData 
       .map((_, index) => {
         const oneFifth = index / 5;
 
-        return (Math.cos(oneFifth) * (oneFifth - 10) + index / 6) * 5;
+        return (Math.cos(oneFifth + 10) * (oneFifth - 10) + index / 6) * 5;
       });
   }
 

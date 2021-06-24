@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { grpc } from '@improbable-eng/grpc-web';
+import { NbComponentStatus, NbToastrService } from '@nebular/theme';
 import { BackDevicesService } from 'app/@core/mock/grpc/back/back-devices.service';
 import { DeviceSettingsService } from 'app/@core/mock/grpc/device-settings.service';
 import { IamService } from 'app/@core/mock/grpc/iam.service';
@@ -80,16 +81,16 @@ export class SmartTableComponent implements OnInit{
     },
 
   };
+
   data = [];
   source: LocalDataSource = new LocalDataSource();
-  // source: ServerDataSource;
-// sourceConf: ServerSourceConf;
+
   getAllSub;
 
   isActiveDevice: boolean;
 
   constructor(private backDevService: BackDevicesService, private router: Router, private iamService: IamService,
-    private deviceSettingsService : DeviceSettingsService ){
+    private deviceSettingsService : DeviceSettingsService, private toastrService: NbToastrService ){
 
     this.jwToken = localStorage.getItem('access_token');
 
@@ -127,6 +128,8 @@ export class SmartTableComponent implements OnInit{
           this.isActiveDevice = false;
           this.tabIpPass.deviceStatus = false;
           localStorage.removeItem('token_sense' + child.dIp);
+
+          this.showToast('danger', child.dIp );// show toaster notification => device unreachable
         }
         this.data.push( this.tabIpPass );
         // console.log(this.data);
@@ -135,12 +138,20 @@ export class SmartTableComponent implements OnInit{
     });
   }
 
+
+  showToast(status: NbComponentStatus, ip) {
+    this.toastrService.show(
+      ip + 'is Unreachable!',
+      'Sense Inactive',
+      {limit: 3, status });
+  }
+
   logIn(ip: string, pass: string): void{
 
     var basic = btoa('sense:' + pass); // base64 Encoding
 
     // pass = 'c2Vuc2U6R01HZ3BHZz0='; // sense:GMGgpGg=
-    // pass = 'c2Vuc2U6cjNaQ0I4az0='; // r3ZCB8k= // sense:r3ZCB8k=
+    // pass = 'c2Vuc2U6cjNaQ0I4az0='; // sense:r3ZCB8k=
 
     const auth = new grpc.Metadata();
     auth.headersMap ["Authorization"] = ['Basic ' + basic];
@@ -159,6 +170,7 @@ export class SmartTableComponent implements OnInit{
     }).catch(err => {
       console.log(JSON.stringify(err));
       console.log('Can not connect to IP: ', ip);
+
 
 
     });
@@ -205,13 +217,6 @@ export class SmartTableComponent implements OnInit{
   }
 }
 
-onUserRowHover(event): void {
-  // let $:any;
-  // $("#myModal").modal("show");
-}
-onCustomAction(event): void {
-
-}
 
 deleteDevice(auth: string, id: string){
 

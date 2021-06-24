@@ -1,7 +1,7 @@
 <nb-card-header>
-  <!-- <nb-select [selected]="selectedCurrency" (selectedChange)="changeCurrency($event)">
-    <nb-option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</nb-option>
-  </nb-select> --> Live Detection
+  <nb-select [selected]="selectedFeature" (selectedChange)="changeFeature($event)">
+    <nb-option *ngFor="let feature of features" [value]="feature">{{ feature }}</nb-option>
+  </nb-select> Global Detection
 </nb-card-header>
 <nb-card-body>
   <div class="chart-info">
