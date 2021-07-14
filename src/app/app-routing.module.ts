@@ -14,7 +14,7 @@ export const routes: Routes = [
       .then(g => g.NgxAuthModule),
   },
 
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth/register', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 
 ];
