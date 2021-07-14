@@ -6,6 +6,7 @@
 <nb-alert *ngIf="!success && errorMessage!=='' && submitted" status="danger" role="alert" closable (close)="onClose()">
   <p class="alert-title"><b>{{errorMessage}}</b></p>
 </nb-alert>
+
 <nb-alert *ngIf="success" status="success" role="alert" closable (close)="onClose()">
   <p class="alert-title"><b>{{successMessage}}</b></p>
 </nb-alert>

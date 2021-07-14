@@ -66,7 +66,7 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit {
 
   reloadPage(jwToken : any): void {
 
-    console.log(jwToken);
+    // console.log(jwToken);
 
     localStorage.setItem('access_token', jwToken);
 

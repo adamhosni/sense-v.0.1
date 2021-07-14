@@ -12,6 +12,8 @@ import {
   NbInputModule
 } from '@nebular/theme';
 import { NgxLoginComponent } from './login/login.component';
+import { NgxRegisterComponent } from './register/register.component';
+// import { NgxRegisterComponent } from './register/register/register.component';
 
 
 @NgModule({
@@ -27,21 +29,21 @@ import { NgxLoginComponent } from './login/login.component';
 
     NbAuthModule.forRoot({
       strategies: [
-        NbPasswordAuthStrategy.setup({
-          name: 'email',
+        // NbPasswordAuthStrategy.setup({
+        //   name: 'email',
 
-          baseEndpoint: 'http://localhost:3000/api',
-              login: {
-                // ...
-                endpoint: '/auth/login',
-                // method: 'post',
-              },
-              register: {
-                // ...
-                endpoint: '/auth/register',
-                // method: 'post',
-              },
-        }),
+        //   baseEndpoint: 'http://localhost:3000/api',
+        //       login: {
+        //         // ...
+        //         endpoint: '/auth/login',
+        //         // method: 'post',
+        //       },
+        //       register: {
+        //         // ...
+        //         endpoint: '/auth/register',
+        //         // method: 'post',
+        //       },
+        // }),
       ],
       forms: {
         login: {
@@ -62,6 +64,7 @@ import { NgxLoginComponent } from './login/login.component';
   declarations: [
     // ... here goes our new components
     NgxLoginComponent,
+    NgxRegisterComponent,
   ],
 })
 export class NgxAuthModule {

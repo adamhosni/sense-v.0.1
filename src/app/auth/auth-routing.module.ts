@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NbAuthComponent } from '@nebular/auth';  // <---
-import { MainComponent } from 'app/pages/main/main.component';
+import { NbAuthComponent } from '@nebular/auth';
 import { NgxLoginComponent } from './login/login.component';
+import { NgxRegisterComponent } from './register/register.component';
+// import { NgxRegisterComponent } from './register/register/register.component';
 
 export const routes: Routes = [
   {
@@ -12,17 +13,14 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: NgxLoginComponent, // <---
+        component: NgxLoginComponent,
+      },
+      {
+        path: 'register',
+        component: NgxRegisterComponent,
       },
     ],
   },
-
-  // {
-  //   path: 'main-dashboard/:jwToken',
-  //   component: MainComponent,
-
-  // },
-
 ];
 
 @NgModule({

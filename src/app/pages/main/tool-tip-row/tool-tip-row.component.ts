@@ -39,8 +39,8 @@ import { ViewCell } from 'ng2-smart-table';
 @Component({
   selector: 'button-view',
   template: `
-    <button nbButton *ngIf="renderValue == 'FALSE'" status="danger" (click)="onClick()">{{ renderValue }}</button>
-    <button nbButton *ngIf="renderValue == 'TRUE'" status="success" (click)="onClick()">{{ renderValue }}</button>
+    <button nbButton *ngIf="renderValue == 'Disconnected'" status="danger" (click)="onClick()">{{ renderValue }}</button>
+    <button nbButton *ngIf="renderValue == 'Connected'" status="success" (click)="onClick()">{{ renderValue }}</button>
   `,
 })
 export class ToolTipRowComponent implements ViewCell, OnInit {
@@ -52,7 +52,9 @@ export class ToolTipRowComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
-    this.renderValue = this.value.toString().toUpperCase();
+    if (this.value) this.renderValue = 'Connected';
+    else this.renderValue = 'Disconnected';
+    // this.renderValue = this.value.toString().toUpperCase();
   }
 
   onClick() {

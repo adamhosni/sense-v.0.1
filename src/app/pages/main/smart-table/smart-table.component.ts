@@ -141,7 +141,7 @@ export class SmartTableComponent implements OnInit{
 
   showToast(status: NbComponentStatus, ip) {
     this.toastrService.show(
-      ip + 'is Unreachable!',
+      ip + ' is Unreachable!',
       'Sense Inactive',
       {limit: 3, status });
   }
