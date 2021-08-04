@@ -1,12 +1,11 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { grpc } from '@improbable-eng/grpc-web';
 import { NbComponentStatus, NbToastrService } from '@nebular/theme';
 import { BackDevicesService } from 'app/@core/mock/grpc/back/back-devices.service';
 import { DeviceSettingsService } from 'app/@core/mock/grpc/device-settings.service';
 import { IamService } from 'app/@core/mock/grpc/iam.service';
-import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
-import { ServerSourceConf } from 'ng2-smart-table/lib/lib/data-source/server/server-source.conf';
+import { LocalDataSource } from 'ng2-smart-table';
 import { ToolTipRowComponent } from '../tool-tip-row/tool-tip-row.component';
 
 
@@ -15,7 +14,7 @@ import { ToolTipRowComponent } from '../tool-tip-row/tool-tip-row.component';
   templateUrl: './smart-table.component.html',
   styleUrls: ['./smart-table.component.scss'],
 })
-export class SmartTableComponent implements OnInit{
+export class SmartTableComponent implements OnInit, OnDestroy{
 
   jwToken;
   tabIpPass: any;
@@ -100,8 +99,6 @@ export class SmartTableComponent implements OnInit{
 
     // this.getAllSub =
     this.backDevService.getAllDevices(this.jwToken).subscribe( data => {
-      // console.log(data);
-
 
       for(let dev in data) {
         let child = data[dev];
@@ -165,6 +162,8 @@ export class SmartTableComponent implements OnInit{
       }
       else {
         this.isActiveDevice = false;
+        localStorage.removeItem('token_sense' + ip);
+
       }
 
     }).catch(err => {
@@ -246,6 +245,19 @@ addDevice(bearer: String, ip: String, password: String){
     if (data['message'].includes('saved')) console.log(data['message']);
 
     });
+
+}
+
+ngOnDestroy(){
+
+  var key;
+  for (var i = 0; i < localStorage.length; i++) {
+    key = localStorage.key(i);
+    if( key.includes('token_sense') ){
+      localStorage.removeItem(key);
+    }
+  }
+
 
 }
 

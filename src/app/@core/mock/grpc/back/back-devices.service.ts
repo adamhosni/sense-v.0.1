@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const AUTH_API = 'https://sense-v-0-2.herokuapp.com/api/device/';
-// const AUTH_API = 'http://localhost:3000/api/device/';
+// const AUTH_API = 'https://sense-v-0-2.herokuapp.com/api/device/';
+const AUTH_API = 'http://localhost:3000/api/device/';
 
 
 

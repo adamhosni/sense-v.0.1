@@ -17,6 +17,7 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 // import { NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
 // import { FilterPipe } from './@theme/pipes';
 
@@ -46,6 +47,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
     NbEvaIconsModule,
+    NgxSliderModule
     ],
   bootstrap: [AppComponent],
 })
